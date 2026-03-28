@@ -1,53 +1,53 @@
 # 03 Spring的父子容器
 
-## 1、概念理解和知识铺垫
+## 1、概念理解和知識鋪墊
 
-在Spring整体框架的核心概念中，容器是核心思想，就是用来管理Bean的整个生命周期的，而在一个项目中，容器不一定只有一个，Spring中可以包括多个容器，而且容器有上下层关系，目前最常见的一种场景就是在一个项目中引入Spring和SpringMVC这两个框架，那么它其实就是两个容器，Spring是父容器，SpringMVC是其子容器，并且在父容器中注册的Bean对于子容器是可见的，而在子容器中注册的Bean对于父容器是不可见的，也就是子容器可以看见父容器中的注册的Bean，反之就不行。
+在Spring整體框架的核心概念中，容器是核心思想，就是用來管理Bean的整個生命週期的，而在一個專案中，容器不一定只有一個，Spring中可以包括多個容器，而且容器有上下層關係，目前最常見的一種場景就是在一個專案中引入Spring和SpringMVC這兩個框架，那麼它其實就是兩個容器，Spring是父容器，SpringMVC是其子容器，並且在父容器中註冊的Bean對於子容器是可見的，而在子容器中註冊的Bean對於父容器是不可見的，也就是子容器可以看見父容器中的註冊的Bean，反之就不行。
 
-我们可以使用统一的如下注解配置来对Bean进行批量注册，而不需要再给每个Bean单独使用xml的方式进行配置。
+我們可以使用統一的如下註解配置來對Bean進行批次註冊，而不需要再給每個Bean單獨使用xml的方式進行配置。
 
 ```xml
 <context:component-scan base-package="com.nnngu" />
 ```
 
-从Spring提供的参考手册中我们得知该配置的功能是扫描配置的base-package包下的所有使用了\@Component注解的类，并且将它们自动注册到容器中，同时也扫描\@Controller，\@Service，\@Respository这三个注解，因为他们是继承自\@Component。
+從Spring提供的參考手冊中我們得知該配置的功能是掃描配置的base-package包下的所有使用了\@Component註解的類，並且將它們自動註冊到容器中，同時也掃描\@Controller，\@Service，\@Respository這三個註解，因為他們是繼承自\@Component。
 
-在项目中我们经常见到还有如下这个配置，其实有了上面的配置，这个是可以省略掉的，因为上面的配置会默认打开以下配置。以下配置会默认声明了\@Required、\@Autowired、 \@PostConstruct、\@PersistenceContext、\@Resource、\@PreDestroy等注解。
+在專案中我們經常見到還有如下這個配置，其實有了上面的配置，這個是可以省略掉的，因為上面的配置會預設開啟以下配置。以下配置會預設宣告瞭\@Required、\@Autowired、 \@PostConstruct、\@PersistenceContext、\@Resource、\@PreDestroy等註解。
 
 ```xml
 <context:annotation-config/>
 ```
 
-另外，还有一个和SpringMVC相关如下配置，经过验证，这个是SpringMVC必须要配置的，因为它声明了\@RequestMapping、\@RequestBody、\@ResponseBody等。并且，该配置默认加载很多的参数绑定方法，比如json转换解析器等。
+另外，還有一個和SpringMVC相關如下配置，經過驗證，這個是SpringMVC必須要配置的，因為它宣告瞭\@RequestMapping、\@RequestBody、\@ResponseBody等。並且，該配置預設載入很多的引數繫結方法，比如json轉換解析器等。
 
 ```xml
 <mvc:annotation-driven />
 ```
 
-## 2、使用场景分析
+## 2、使用場景分析
 
-我们共有Spring和SpringMVC两个容器，它们的配置文件分别为applicationContext.xml和applicationContext-MVC.xml。
+我們共有Spring和SpringMVC兩個容器，它們的配置檔案分別為applicationContext.xml和applicationContext-MVC.xml。
 
-1. 在applicationContext.xml中配置了`<context:component-scan base-package=“com.nnngu" />`，负责所有需要注册的Bean的扫描和注册工作。
+1. 在applicationContext.xml中配置了`<context:component-scan base-package=“com.nnngu" />`，負責所有需要註冊的Bean的掃描和註冊工作。
 
-2. 在applicationContext-MVC.xml中配置`<mvc:annotation-driven />`，负责SpringMVC相关注解的使用。
+2. 在applicationContext-MVC.xml中配置`<mvc:annotation-driven />`，負責SpringMVC相關注解的使用。
 
-3. 启动项目我们发现SpringMVC无法进行跳转，将log的日志打印级别设置为DEBUG进行调试，发现SpringMVC容器中的请求好像没有映射到具体controller中。
+3. 啟動專案我們發現SpringMVC無法進行跳轉，將log的日誌列印級別設定為DEBUG進行除錯，發現SpringMVC容器中的請求好像沒有對映到具體controller中。
 
-4. 在applicationContext-MVC.xml中配置`<context:component-scan base-package=“com.nnngu" />`，重启后，验证成功，springMVC跳转有效。
+4. 在applicationContext-MVC.xml中配置`<context:component-scan base-package=“com.nnngu" />`，重啟後，驗證成功，springMVC跳轉有效。
 
-下面我们来查看具体原因，翻看源码，从SpringMVC的DispatcherServlet开始往下找，我们发现SpringMVC初始化时，会寻找SpringMVC容器中的所有使用了\@Controller注解的Bean，来确定其是否是一个handler。1,2两步的配置使得当前springMVC容器中并没有注册带有\@Controller注解的Bean，而是把所有带有\@Controller注解的Bean都注册在Spring这个父容器中了，所以springMVC找不到处理器，不能进行跳转。
+下面我們來檢視具體原因，翻看原始碼，從SpringMVC的DispatcherServlet開始往下找，我們發現SpringMVC初始化時，會尋找SpringMVC容器中的所有使用了\@Controller註解的Bean，來確定其是否是一個handler。1,2兩步的配置使得當前springMVC容器中並沒有註冊帶有\@Controller註解的Bean，而是把所有帶有\@Controller註解的Bean都註冊在Spring這個父容器中了，所以springMVC找不到處理器，不能進行跳轉。
 
-而在第4步配置中，SpringMVC容器中也注册了所有带有\@Controller注解的Bean，故SpringMVC能找到处理器进行处理，从而正常跳转。
+而在第4步配置中，SpringMVC容器中也註冊了所有帶有\@Controller註解的Bean，故SpringMVC能找到處理器進行處理，從而正常跳轉。
 
-## 3、官方推荐配置
+## 3、官方推薦配置
 
-在实际工程中会包括很多配置，我们按照官方推荐根据不同的业务模块来划分不同容器中注册不同类型的Bean：Spring父容器负责所有其他非\@Controller注解的Bean的注册，而SpringMVC只负责\@Controller注解的Bean的注册，使得他们各负其责、明确边界。配置方式如下：
+在實際工程中會包括很多配置，我們按照官方推薦根據不同的業務模組來劃分不同容器中註冊不同型別的Bean：Spring父容器負責所有其他非\@Controller註解的Bean的註冊，而SpringMVC只負責\@Controller註解的Bean的註冊，使得他們各負其責、明確邊界。配置方式如下：
 
 1. 在applicationContext.xml中配置:
 
 ```xml
-<!-- Spring容器中注册非@Controller注解的Bean -->
+<!-- Spring容器中註冊非@Controller註解的Bean -->
 <context:component-scan base-package="com.nnngu">
    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 </context:component-scan>
@@ -56,15 +56,15 @@
 2. applicationContext-MVC.xml中配置
 
 ```xml
-<!-- SpringMVC容器中只注册带有@Controller注解的Bean -->
+<!-- SpringMVC容器中只註冊帶有@Controller註解的Bean -->
 <context:component-scan base-package="com.nnngu" use-default-filters="false">
    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 </context:component-scan>
 ```
 
-## 4、总结
+## 4、總結
 
-我们在清楚了Spring和SpringMVC的父子容器关系、以及扫描注册的原理以后，根据官方建议，就可以很好把不同类型的Bean分配到不同的容器中进行管理。出现Bean找不到或者SpringMVC不能跳转以及事务的配置失效的问题时，我们就可以很快的定位以及解决问题了。
+我們在清楚了Spring和SpringMVC的父子容器關係、以及掃描註冊的原理以後，根據官方建議，就可以很好把不同型別的Bean分配到不同的容器中進行管理。出現Bean找不到或者SpringMVC不能跳轉以及事務的配置失效的問題時，我們就可以很快的定位以及解決問題了。
 
 
 

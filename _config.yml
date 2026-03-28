@@ -6,10 +6,10 @@
 # Site
 title: nnngu
 subtitle:
-description: 温故而知新
+description: 溫故而知新
 author: nnngu
-# Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
-language: zh-Hans
+# Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hant, zh-hk, zh-tw
+language: zh-Hant
 date_format: '%Y-%m-%d'
 
 # URL

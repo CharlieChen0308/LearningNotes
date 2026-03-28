@@ -1,6 +1,8 @@
 # 01 Spring MVC的配置和使用
 
-笔记仓库：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)    
+> **版本提示**：本篇基於 Spring MVC 3.x，使用 XML 配置和 JSP 視圖。現代 Spring MVC 6.x 搭配 Spring Boot 使用註解驅動開發，請參考 [02 Spring MVC 註解驅動開發與 RESTful API](02%20Spring%20MVC%20%E8%A8%BB%E8%A7%A3%E9%A9%85%E5%8B%95%E9%96%8B%E7%99%BC%E8%88%87%20RESTful%20API.md)、[03 例外處理與資料驗證](03%20Spring%20MVC%20%E4%BE%8B%E5%A4%96%E8%99%95%E7%90%86%E8%88%87%E8%B3%87%E6%96%99%E9%A9%97%E8%AD%89.md)、[04 攔截器與跨域設定](04%20Spring%20MVC%20%E6%94%94%E6%88%AA%E5%99%A8%E8%88%87%E8%B7%A8%E5%9F%9F%E8%A8%AD%E5%AE%9A.md)。
+
+筆記倉庫：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)
 
 ---
 
@@ -22,7 +24,7 @@ spring-web
 
 ```
 
-使用 Maven 构建的 Java 项目，需要在 pom.xml 中添加如下依赖：
+使用 Maven 構建的 Java 專案，需要在 pom.xml 中新增如下依賴：
 
 ```xml
         <dependency>
@@ -78,13 +80,13 @@ spring-web
 
 ```
 
-## 前期准备
+## 前期準備
 
-1、在`com.nnngu.entity`包下创建 `User.java`
+1、在`com.nnngu.entity`包下建立 `User.java`
 
 ![][1]
 
-代码如下：
+程式碼如下：
 
 ```java
 package com.nnngu.entity;
@@ -125,11 +127,11 @@ public class User implements Serializable {
 
 ```
 
-2、在下图所示的位置创建两个 jsp 页面
+2、在下圖所示的位置建立兩個 jsp 頁面
 
 ![][2]
 
-`create.jsp`的代码如下：
+`create.jsp`的程式碼如下：
 
 ```jsp
 <%--
@@ -145,27 +147,27 @@ public class User implements Serializable {
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>创建用户</title>
+    <title>建立使用者</title>
 </head>
 <body>
 <form action="save" method="post">
     <fieldset>
-        <legend>创建用户</legend>
+        <legend>建立使用者</legend>
         <p>
             <label>姓名：</label> <input type="text" id="name" name="name"
                                       tabindex="1">
         </p>
         <p>
-            <label>年龄：</label> <input type="text" id="age" name="age"
+            <label>年齡：</label> <input type="text" id="age" name="age"
                                       tabindex="2">
         </p>
         <p>
-            <label>密码：</label> <input type="text" id="pwd" name="pwd"
+            <label>密碼：</label> <input type="text" id="pwd" name="pwd"
                                       tabindex="3">
         </p>
         <p id="buttons">
             <input id="reset" type="reset" tabindex="4" value="重置"> <input
-                id="submit" type="submit" tabindex="5" value="创建">
+                id="submit" type="submit" tabindex="5" value="建立">
         </p>
     </fieldset>
 </form>
@@ -174,7 +176,7 @@ public class User implements Serializable {
 
 ```
 
-`detail.jsp` 的代码如下：
+`detail.jsp` 的程式碼如下：
 
 ```jsp
 <%--
@@ -190,16 +192,16 @@ public class User implements Serializable {
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>用户详情</title>
+    <title>使用者詳情</title>
 </head>
 <body>
 <div id="gloobal">
-    <h4>创建成功</h4>
+    <h4>建立成功</h4>
     <p>
-    <h5>详情：</h5>
+    <h5>詳情：</h5>
     姓名：${user.name}<br/>
-    年龄：${user.age}<br/>
-    密码：${user.pwd}<br/>
+    年齡：${user.age}<br/>
+    密碼：${user.pwd}<br/>
     </p>
 </div>
 </body>
@@ -209,7 +211,7 @@ public class User implements Serializable {
 
 ## 配置Spring MVC
 
-1、在 web.xml 文件中进行如下配置：
+1、在 web.xml 檔案中進行如下配置：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -219,11 +221,11 @@ public class User implements Serializable {
          version="3.1">
 
     <filter>
-        <description>字符集过滤器</description>
+        <description>字符集過濾器</description>
         <filter-name>encodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
-            <description>字符集编码</description>
+            <description>字符集編碼</description>
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
@@ -251,11 +253,11 @@ public class User implements Serializable {
 
 ```
 
-2、在下图所示的位置创建 `springmvc-context.xml`
+2、在下圖所示的位置建立 `springmvc-context.xml`
 
 ![][3]
 
-`springmvc-context.xml`的代码如下：
+`springmvc-context.xml`的程式碼如下：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -267,13 +269,13 @@ public class User implements Serializable {
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd ">
 
-    <!-- 对包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->
+    <!-- 對包中的所有類進行掃描，以完成Bean建立和自動依賴注入的功能 -->
     <context:component-scan base-package="com.nnngu"/>
 
-    <!-- 启动基于Spring MVC的注解功能，将控制器与方法映射加入到容器中 -->
+    <!-- 啟動基於Spring MVC的註解功能，將控制器與方法對映加入到容器中 -->
     <mvc:annotation-driven/>
 
-    <!-- 这个类用于Spring MVC视图解析 -->
+    <!-- 這個類用於Spring MVC檢視解析 -->
     <beans:bean id="viewResolver"
                 class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <beans:property name="prefix" value="/WEB-INF/pages/"/>
@@ -283,11 +285,11 @@ public class User implements Serializable {
 </beans:beans>
 ```
 
-3、编写 Controller
+3、編寫 Controller
 
 ![][4]
 
-在上图所示的位置创建 `UserController.java` ，代码如下：
+在上圖所示的位置建立 `UserController.java` ，程式碼如下：
 
 ```java
 package com.nnngu;
@@ -299,7 +301,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * 用户管理
+ * 使用者管理
  */
 @Controller
 public class UserController {
@@ -310,7 +312,7 @@ public class UserController {
     }
 
     @RequestMapping("/save")
-    public String Save(@ModelAttribute("form") User user, Model model) { // user:视图层传给控制层的表单对象；  model:控制层返回给视图层的对象
+    public String Save(@ModelAttribute("form") User user, Model model) { // user:檢視層傳給控制層的表單物件；  model:控制層返回給檢視層的物件
         model.addAttribute("user", user);
         return "detail";
     }
@@ -318,15 +320,15 @@ public class UserController {
 
 ```
 
-## 测试
+## 測試
 
-启动项目，在浏览器输入 `localhost:8080`
+啟動專案，在瀏覽器輸入 `localhost:8080`
 
 ![][5]
 
 ![][6]
 
-测试成功。
+測試成功。
 
 
   [1]: https://www.github.com/nnngu/FigureBed/raw/master/2018/2/13/1518507826902.jpg

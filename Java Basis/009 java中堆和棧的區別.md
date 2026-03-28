@@ -1,0 +1,55 @@
+# java中堆和棧的區別
+
+筆記倉庫：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)    
+
+---
+
+堆和棧都是Java用來在RAM中存放資料的地方。
+
+## 堆
+
+（1）**Java的堆是一個執行時資料區，類的物件從堆中分配空間**。這些物件透過new等指令建立，透過垃圾回收器來銷燬。
+
+（2）堆的優勢是可以動態地分配記憶體空間，需要多少記憶體空間不必事先告訴編譯器，因為它是在執行時動態分配的。但缺點是，由於需要在執行時動態分配記憶體，所以存取速度較慢。 
+
+## 棧
+
+（1）**棧中主要存放一些基本資料型別的變數**（byte，short，int，long，float，double，boolean，char）和物件的引用。
+
+（2）棧的優勢是，存取速度比堆快，棧資料可以共享。但缺點是，存放在棧中的資料佔用多少記憶體空間需要在編譯時確定下來，缺乏靈活性。
+
+## 舉例說明棧資料可以共享
+
+String 可以用以下兩種方式來建立：
+
+<pre>String str1 = new String("abc");
+String str2 = "abc";</pre>
+
+第一種使用new來建立的物件，它存放在堆中。每呼叫一次就建立一個新的物件。 
+
+第二種是先在棧中建立物件的引用str2，然後查詢棧中有沒有存放“abc”，如果沒有，則將“abc”存放進棧，並將str2指向“abc”，如果已經有“abc”， 則直接將str2指向“abc”。
+
+下面用程式碼說明上面的理論：
+
+<pre>    public static void main(String[] args) {
+        String str1 = new String("abc");
+        String str2 = new String("abc");
+        System.out.println(str1 == str2);
+    }</pre>
+
+輸出結果為：false
+
+* * *
+
+<pre>    public static void main(String[] args) {
+        String str1 = "abc";
+        String str2 = "abc";
+        System.out.println(str1 == str2);
+    }</pre>
+
+輸出結果為：true
+
+因此，用第二種方式建立多個“abc”字串，在記憶體中其實只存在一個物件而已。 這種寫法有利於節省記憶體空間。 同時還可以提高程式的執行速度，因為JVM會自動根據棧中資料的實際情況來決定是否建立新物件。
+
+
+

@@ -1,33 +1,35 @@
 # 01 Hibernate的配置和使用
 
-笔记仓库：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)    
+> **版本提示**：本篇基於 Hibernate 4.x，使用 XML 對映方式。現代 Java 持久層主流為 Spring Data JPA（底層仍為 Hibernate），使用 JPA 註解取代 XML 對映，請參考 [02 從 Hibernate 到 Spring Data JPA](02%20%E5%BE%9E%20Hibernate%20%E5%88%B0%20Spring%20Data%20JPA.md)。
+
+筆記倉庫：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)
 
 ---
 
-## Hibernate 介绍
+## Hibernate 介紹
 
-Hibernate 是一个基于 jdbc 的开源的持久化框架，是一个优秀的 ORM 实现，它很大程度的简化了 dao 层的编码工作。
+Hibernate 是一個基於 jdbc 的開源的持久化框架，是一個優秀的 ORM 實現，它很大程度的簡化了 dao 層的編碼工作。
 
-Hibernate 对 JDBC 访问数据库的代码做了封装，大大简化了数据访问层繁琐的重复性代码。 
+Hibernate 對 JDBC 訪問資料庫的程式碼做了封裝，大大簡化了資料訪問層繁瑣的重複性程式碼。 
 
-Hibernate 在分层结构中处于持久化层，封装对数据库的访问细节，使程序员更专注于实现业务逻辑。
+Hibernate 在分層結構中處於持久化層，封裝對資料庫的訪問細節，使程式設計師更專注於實現業務邏輯。
 
-## Hibernate 的体系结构
+## Hibernate 的體系結構
 
 ![][1]
 
-## Hibernate 的开发步骤
+## Hibernate 的開發步驟
 
-1. 创建持久化类
-2. 创建 对象-关系 映射文件  （ \*.hbm.xml ）
-3. 创建 Hibernate 配置文件  （ hibernate.cfg.xml ）
-4. 通过 Hibernate API 编写访问数据库的代码
+1. 建立持久化類
+2. 建立 物件-關係 對映檔案  （ \*.hbm.xml ）
+3. 建立 Hibernate 配置檔案  （ hibernate.cfg.xml ）
+4. 透過 Hibernate API 編寫訪問資料庫的程式碼
 
 ![][2]
 
 ## 使用 Hibernate 的例子
 
-Hibernate 需要如下几个 jar 包：
+Hibernate 需要如下幾個 jar 包：
 
 ```
 antlr-2.7.7
@@ -43,7 +45,7 @@ jboss-transaction-api_1.2_spec-1.0.0
 mysql-connector-java-5.1.38-bin
 ```
 
-使用 Maven 构建的 Java 项目，需要在 pom.xml 中添加如下依赖：
+使用 Maven 構建的 Java 專案，需要在 pom.xml 中新增如下依賴：
 
 ```xml
         <dependency>
@@ -109,15 +111,15 @@ mysql-connector-java-5.1.38-bin
         </dependency>
 ```
 
-### 1. 创建持久化类
+### 1. 建立持久化類
 
-在 MySQL 数据库创建一个 t_user 表，建表语句如下：
+在 MySQL 資料庫建立一個 t_user 表，建表語句如下：
 
 ```sql
 create table t_user( id int primary key auto_increment, name varchar(20) );
 ```
 
-创建一个持久化类 `User.java` ，代码如下：
+建立一個持久化類 `User.java` ，程式碼如下：
 
 ```java
 public class User {
@@ -148,17 +150,17 @@ public class User {
 
 ```
 
-### 2. 创建 对象-关系 映射文件  （ \*.hbm.xml ）
+### 2. 建立 物件-關係 對映檔案  （ \*.hbm.xml ）
 
-创建映射文件 `User.hbm.xml`
+建立對映檔案 `User.hbm.xml`
 
-**注意：该映射文件要与 User 类放在同一个包下。**
+**注意：該對映檔案要與 User 類放在同一個包下。**
 
-**如果使用 Maven 构建的项目，所有的配置文件统一放在 resources 目录下。因为 Maven 默认只会读取 resources 目录下的配置文件。**
+**如果使用 Maven 構建的專案，所有的配置檔案統一放在 resources 目錄下。因為 Maven 預設只會讀取 resources 目錄下的配置檔案。**
 
 ![][3]
 
- `User.hbm.xml`的代码如下：
+ `User.hbm.xml`的程式碼如下：
  
  ```xml
  <?xml version="1.0"?>
@@ -176,13 +178,13 @@ public class User {
 </hibernate-mapping>
  ```
  
- ### 3. 创建 Hibernate 配置文件  （ hibernate.cfg.xml ）
+ ### 3. 建立 Hibernate 配置檔案  （ hibernate.cfg.xml ）
  
- 在 resources 目录下创建 `hibernate.cfg.xml` 
+ 在 resources 目錄下建立 `hibernate.cfg.xml` 
  
  ![][4]
  
-  `hibernate.cfg.xml` 的代码如下：
+  `hibernate.cfg.xml` 的程式碼如下：
   
   ```xml
 <!DOCTYPE hibernate-configuration PUBLIC
@@ -191,8 +193,8 @@ public class User {
 
 <hibernate-configuration>
     <session-factory>
-        <!-- 1. 配置数据库信息 -->
-        <!-- 方言(连接的数据库类型) -->
+        <!-- 1. 配置資料庫資訊 -->
+        <!-- 方言(連線的資料庫型別) -->
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="connection.url">jdbc:mysql:///hibernate_day01?characterEncoding=utf-8&amp;useUnicode=TRUE&amp;autoReconnect=true</property>
@@ -200,10 +202,10 @@ public class User {
         <property name="connection.password">1</property>
 
         <!-- 2. 其他配置 -->
-        <!-- 显示生成的SQL语句 -->
+        <!-- 顯示生成的SQL語句 -->
         <property name="hibernate.show_sql">true</property>
 
-        <!-- 3. 导入映射文件 -->
+        <!-- 3. 匯入對映檔案 -->
         <mapping resource="com.nnngu.entity/User.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>  
@@ -211,25 +213,25 @@ public class User {
   
   ![][5]
   
-  ### 4. 通过 Hibernate API 编写访问数据库的代码
+  ### 4. 透過 Hibernate API 編寫訪問資料庫的程式碼
   
-步骤：
+步驟：
 
-1. 获取 Configuration 对象
-2. 获取 SessionFactory 对象
-3. 获取 Session ，打开事务
-4. 用面向对象的方式操作数据库
-5. 提交事务，关闭 Session
+1. 獲取 Configuration 物件
+2. 獲取 SessionFactory 物件
+3. 獲取 Session ，開啟事務
+4. 用物件導向的方式運算元據庫
+5. 提交事務，關閉 Session
   
-首先创建一个工具类 `HibernateUtils.java`，该工具类的作用：
+首先建立一個工具類 `HibernateUtils.java`，該工具類的作用：
 
 ```
-① 用来获取 Configuration 对象
-② 获取全局唯一的 SessionFactory 
-③ 从全局唯一的 SessionFactory 中打开一个 Session 
+① 用來獲取 Configuration 物件
+② 獲取全域性唯一的 SessionFactory 
+③ 從全域性唯一的 SessionFactory 中開啟一個 Session 
 ```
 
-`HibernateUtils.java`的代码如下：
+`HibernateUtils.java`的程式碼如下：
 
 ```java
 package com.nnngu.dao;
@@ -240,18 +242,18 @@ import org.hibernate.cfg.Configuration;
 
 public class HibernateUtils {
 
-    // SessionFactory全局只需要有一个就可以了，因为它的创建和销毁需要消耗大量的资源。而且它是线程安全的，可以在多线程的环境下使用它
+    // SessionFactory全域性只需要有一個就可以了，因為它的建立和銷燬需要消耗大量的資源。而且它是執行緒安全的，可以在多執行緒的環境下使用它
     private static SessionFactory sessionFactory;
 
     static {
         // 初始化SessionFactory
-        sessionFactory = new Configuration() // 代表配置文件的一个对象
-                .configure() // 读取默认的配置文件(hibernate.cfg.xml)
+        sessionFactory = new Configuration() // 代表配置檔案的一個物件
+                .configure() // 讀取預設的配置檔案(hibernate.cfg.xml)
                 .buildSessionFactory();
     }
 
     /**
-     * 获取全局唯一的SessionFactory
+     * 獲取全域性唯一的SessionFactory
      *
      * @return
      */
@@ -266,7 +268,7 @@ public class HibernateUtils {
 
 ```
 
-然后创建一个 UserDao 类，里面编写代码实现对数据库的操作 (CRUD) 。
+然後建立一個 UserDao 類，裡面編寫程式碼實現對資料庫的操作 (CRUD) 。
 
 ```java
 package com.nnngu.dao;
@@ -288,19 +290,19 @@ public class UserDao {
         Session session = HibernateUtils.openSession();
         Transaction tx = null;
         try {
-            tx = session.beginTransaction(); // 开启事务
-            session.save(user); // 操作数据库
-            tx.commit(); // 提交事务
+            tx = session.beginTransaction(); // 開啟事務
+            session.save(user); // 運算元據庫
+            tx.commit(); // 提交事務
         } catch (RuntimeException e) {
-            tx.rollback(); // 回滚事务
+            tx.rollback(); // 回滾事務
             throw e;
         } finally {
-            session.close(); // 关闭session
+            session.close(); // 關閉session
         }
     }
 
     /**
-     * 删
+     * 刪
      *
      * @param id
      */
@@ -309,8 +311,8 @@ public class UserDao {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            Object user = session.get(User.class, id); // 先获取到这个对象
-            session.delete(user); // 删除
+            Object user = session.get(User.class, id); // 先獲取到這個物件
+            session.delete(user); // 刪除
             tx.commit();
         } catch (RuntimeException e) {
             tx.rollback();
@@ -330,7 +332,7 @@ public class UserDao {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.update(user); // 操作数据库
+            session.update(user); // 運算元據庫
             tx.commit();
         } catch (RuntimeException e) {
             tx.rollback();
@@ -341,7 +343,7 @@ public class UserDao {
     }
 
     /**
-     * 查，根据id查询
+     * 查，根據id查詢
      *
      * @param id
      * @return
@@ -351,7 +353,7 @@ public class UserDao {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            User user = (User) session.get(User.class, id); // 操作数据库
+            User user = (User) session.get(User.class, id); // 運算元據庫
             tx.commit();
             return user;
         } catch (RuntimeException e) {
@@ -363,7 +365,7 @@ public class UserDao {
     }
 
     /**
-     * 查，查询所有
+     * 查，查詢所有
      *
      * @return
      */
@@ -372,7 +374,7 @@ public class UserDao {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            // 使用HQL语句
+            // 使用HQL語句
             List<User> list = session.createQuery("from User").list();
             tx.commit();
             return list;
@@ -387,11 +389,11 @@ public class UserDao {
 
 ```
 
-## 测试
+## 測試
 
-编写测试类 `UserDaoTest.java`
+編寫測試類 `UserDaoTest.java`
 
-代码如下：
+程式碼如下：
 
 ```java
 package com.nnngu.test;
@@ -411,14 +413,14 @@ public class UserDaoTest {
      */
     public void testSave() {
         User user = new User();
-        user.setName("黄药师");
-        // 保存
+        user.setName("黃藥師");
+        // 儲存
         userDao.save(user);
     }
 
     @Test
     /**
-     * 删
+     * 刪
      */
     public void testDelete() {
         userDao.delete(1);
@@ -429,16 +431,16 @@ public class UserDaoTest {
      * 改
      */
     public void testUpdate() {
-        // 从数据库中获取一条存在的数据
+        // 從資料庫中獲取一條存在的資料
         User user = userDao.getById(2);
-        user.setName("东邪");
+        user.setName("東邪");
         // 更新
         userDao.update(user);
     }
 
     @Test
     /**
-     * 查，根据id查询
+     * 查，根據id查詢
      */
     public void testGetById() {
         User user = userDao.getById(2);
@@ -447,7 +449,7 @@ public class UserDaoTest {
 
     @Test
     /**
-     * 查，查询所有
+     * 查，查詢所有
      */
     public void testFindAll() {
         List<User> list = userDao.findAll();
@@ -459,7 +461,7 @@ public class UserDaoTest {
 
 ```
 
-测试通过。
+測試透過。
 
 
 

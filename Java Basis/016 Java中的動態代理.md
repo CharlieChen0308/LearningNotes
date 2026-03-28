@@ -1,0 +1,191 @@
+# 016 Java中的動態代理
+
+筆記倉庫：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)    
+
+---
+
+## 代理
+
+代理模式是一種常用的設計模式，其目的就是為其他物件提供一個代理以控制對某個真實物件的訪問。代理類負責為委託類預處理訊息，過濾訊息並轉發訊息，以及進行訊息被委託類執行後的後續處理。
+
+代理可以實現過濾請求、插入橫切邏輯等功能，應用場景豐富多彩。
+
+代理的方式分為靜態代理和動態代理兩種。
+
+### 靜態代理
+
+程式執行前代理類的位元組碼檔案依然存在，需要程式設計師編寫原始檔。
+
+* 缺點：要針對於每一個類撰寫代理類；對於單個被代理的類，如果需要被代理的方法很多，又加大了工作量。
+
+* 優點：直觀，可讀性較強。
+
+### 動態代理
+
+程式執行時動態生成代理類的位元組碼檔案，不需要程式設計師編寫代理類java檔案。
+
+* 缺點：由於是執行時動態生成的，因此可讀性不是很強；而且受限於被代理類自身的屬性（jdk需要提供介面，cglib需要是非私有類）。
+
+* 優點：程式碼更加簡潔，解放了無謂的編碼工作。
+
+## 實現方式
+
+讓你來實現一個代理類，需要哪些上下文，有哪些解決方案？
+
+jdk和cglib兩種解決方案。
+
+要生產一個類A的代理類，唯一需要了解的就是生產一個什麼類，所以需要類A的介面。
+
+至於如何生產一個class檔案，在既定規則下你可以先編寫java檔案，再編譯成class檔案。而最好的做法是直接操作位元組碼檔案，jdk操作位元組碼檔案用了反射包裡面的介面和類，cglib操作位元組碼檔案用了開源框架asm框架。
+
+## 代理的圖示
+
+![][1]
+
+透過代理層這一中間層，有效的控制對於真實委託類物件的直接訪問，同時可以實現自定義的控制策略（Spring的AOP機制），設計上獲得更大的靈活性。
+
+## JDK的動態代理實現
+
+jdk的動態代理，依賴的是反射包下的InvocationHandler介面，我們的代理類實現InvocationHandler，重寫invoke()方法，每當我們的代理類呼叫方法時，都會預設先經過invoke()方法。
+
+*UserService介面*
+```java
+public interface UserService {
+    public String getName(int id);
+    public Integer getAge(int id);
+}
+```
+
+*介面的實現類UserServiceImpl*
+```java
+public class UserServiceImpl implements UserService {
+
+    public String getName(int id) {
+        System.out.println("------getName------");
+        return "Tom";
+    }
+
+    public Integer getAge(int id) {
+        System.out.println("------getAge------");
+        return 10;
+    }
+}
+```
+
+*UserInvocationHandler.java*
+```java
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+public class UserInvocationHandler implements InvocationHandler {
+
+    private Object target;
+
+    UserInvocationHandler() {
+        super();
+    }
+
+    UserInvocationHandler(Object target) {
+        super();
+        this.target = target;
+    }
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if("getName".equals(method.getName())){
+            System.out.println("++++++before " + method.getName() + "++++++");
+            Object result = method.invoke(target, args);
+            System.out.println("++++++after " + method.getName() + "++++++");
+            return result;
+        }else{
+            Object result = method.invoke(target, args);
+            return result;
+        }
+    }
+}
+```
+
+*測試類TestUserInvocationHandler.java*
+```java
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+public class TestUserInvocationHandler {
+    public static void main(String[] args) {
+        UserService userService = new UserServiceImpl();
+        InvocationHandler invocationHandler = new UserInvocationHandler(userService);
+
+        UserService userServiceProxy = (UserService) Proxy.newProxyInstance(
+                userService.getClass().getClassLoader(),
+                userService.getClass().getInterfaces(),
+                invocationHandler);
+
+        System.out.println(userServiceProxy.getName(1));
+        System.out.println(userServiceProxy.getAge(1));
+    }
+}
+```
+
+執行結果：
+
+![][2]
+
+## cglib的動態代理實現
+
+cglib需要的jar包：[cglib.jar](https://github.com/nnngu/SharedResource/raw/master/jar/cglib-2.2.2.jar) 和 [asm.jar](https://github.com/nnngu/SharedResource/raw/master/jar/asm-3.3.1.jar)
+
+cglib依賴的是cglib包下的MethodInterceptor介面，每呼叫代理類的方法，都會呼叫intercept方法
+
+*CglibMethodInterceptor.java*
+```java
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+public class CglibMethodInterceptor implements MethodInterceptor {
+    public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+        System.out.println("------before " + methodProxy.getSuperName() + "------");
+        Object o1 = methodProxy.invokeSuper(o, args);
+        System.out.println("------after " + methodProxy.getSuperName() + "------");
+        return o1;
+    }
+}
+
+```
+
+*TestCglibMethodInterceptor.java*
+```java
+import net.sf.cglib.proxy.Enhancer;
+
+public class TestCglibMethodInterceptor {
+    public static void main(String[] args) {
+        CglibMethodInterceptor cglibProxy = new CglibMethodInterceptor();
+
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(UserServiceImpl.class);
+        enhancer.setCallback(cglibProxy);
+
+        UserServiceImpl o = (UserServiceImpl) enhancer.create();
+        o.getName(1);
+        o.getAge(1);
+    }
+}
+
+```
+
+執行結果：
+
+![][3]
+
+## 總結
+
+JDK動態代理的原理是根據定義好的規則，用傳入的介面建立一個新類，這就是為什麼採用JDK動態代理時只能用介面引用指向代理，而不能用傳入的類引用指向代理。
+
+cglib採用的是建立一個繼承實現類的子類，用asm庫動態修改子類的程式碼來實現的，所以可以用傳入的類引用指向代理類。
+
+
+
+
+  [1]: https://www.github.com/nnngu/FigureBed/raw/master/2018/1/26/1516913969285.jpg
+  [2]: https://www.github.com/nnngu/FigureBed/raw/master/2018/1/26/1516916430119.jpg
+  [3]: https://www.github.com/nnngu/FigureBed/raw/master/2018/1/26/1516918841007.jpg

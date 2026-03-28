@@ -1,0 +1,20 @@
+# JAVA有哪些資料型別？基本資料型別各佔多少個位元組
+
+筆記倉庫：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)    
+
+---
+
+**java的資料型別分為：基本資料型別和引用資料型別。**
+
+![][1]
+
+**基本資料型別各佔多少個位元組：**
+
+![][2]
+
+關於boolean佔幾個位元組，眾說紛紜，雖然boolean表現出非0即1的“位”特性，但是儲存空間的基本計量單位是位元組，不是位。所以boolean至少佔1個位元組。 
+JVM規範中，boolean變數當作int處理，也就是4位元組；而boolean陣列當做byte陣列處理，即boolean型別的陣列裡面的每一個元素佔1個位元組。
+
+
+  [1]: https://www.github.com/nnngu/FigureBed/raw/master/2018/1/21/1516469967556.jpg
+  [2]: https://www.github.com/nnngu/FigureBed/raw/master/2018/1/20/1516444153746.jpg

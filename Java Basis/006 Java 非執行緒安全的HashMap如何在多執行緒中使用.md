@@ -1,0 +1,67 @@
+# Java 非執行緒安全的HashMap如何在多執行緒中使用
+
+筆記倉庫：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)    
+
+---
+
+
+HashMap 是非執行緒安全的。在多執行緒條件下，容易導致死迴圈，具體表現為CPU使用率100%。因此多執行緒環境下保證 HashMap 的執行緒安全性，主要有如下幾種方法：
+
+1.  使用 java.util.Hashtable 類，此類是執行緒安全的。
+
+2.  使用 java.util.concurrent.ConcurrentHashMap，此類是執行緒安全的。
+
+3.  使用 java.util.Collections.synchronizedMap() 方法包裝 HashMap object，得到執行緒安全的Map，並在此Map上進行操作。
+
+4.  自己在程式的關鍵程式碼段加鎖，保證多執行緒安全（不推薦）
+
+### 接下來分析上面列舉的幾種方法實現併發安全的 HashMap 的原理：
+
+（一）java.util.Hashtable類：
+
+檢視該類的原始碼
+
+<pre>public synchronized V get(Object key) {  
+    …… //具體的實現省略，請參考 jdk實現  
+}  
+
+public synchronized V put(K key, V value) {  
+    …… //具體的實現省略，請參考 jdk實現  
+}  
+
+public synchronized V remove(Object key) {  
+    …… //具體的實現省略，請參考 jdk實現  
+}  </pre>
+
+     上面是 Hashtable 類提供的幾個主要方法，包括 get()，put()，remove() 等。注意到**每個方法本身都是 synchronized 的，不會出現兩個執行緒同時對資料進行操作的情況，因此保證了執行緒安全性，但是也大大的降低了執行效率**。因此是不推薦的。
+
+（二）使用 java.util.concurrent.ConcurrentHashMap 類：
+
+該類是 HashMap 的執行緒安全版，與 Hashtable 相比， ConcurrentHashMap 不僅保證了訪問的執行緒安全性，而且在效率上有較大的提高。
+
+ConcurrentHashMap的資料結構如下：
+
+![][1]
+
+可以看出，相對 HashMap 和 Hashtable， ConcurrentHashMap 增加了Segment 層，每個Segment 原理上等同於一個 Hashtable， ConcurrentHashMap 等同於一個 Segment 的陣列。下面是 ConcurrentHashMap 的 put 和 get 方法：
+
+<pre>final Segment<K,V> segmentFor(int hash) {  
+    return segments[(hash >>> segmentShift) & segmentMask];  
+}  
+
+public V put(K key, V value) {  
+    if (value == null)  
+        throw new NullPointerException();  
+    int hash = hash(key.hashCode());  
+    return segmentFor(hash).put(key, hash, value, false);  
+}  
+
+public V get(Object key) {  
+    int hash = hash(key.hashCode());  
+    return segmentFor(hash).get(key, hash);  
+}  </pre>
+
+向 ConcurrentHashMap 中插入資料(put) 或者 讀取資料(get)，首先都要將相應的 Key 對映到對應的 Segment，**因此不用鎖定整個類， 只要對單個的 Segment 操作進行上鎖操作就可以了**。理論上如果有 n 個 Segment，那麼最多可以同時支援 n 個執行緒的併發訪問，從而大大提高了併發訪問的效率。
+
+
+  [1]: https://www.github.com/nnngu/FigureBed/raw/master/2018/1/21/1516471388763.jpg
