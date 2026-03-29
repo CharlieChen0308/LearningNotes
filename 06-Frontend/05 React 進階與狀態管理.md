@@ -619,7 +619,6 @@ function ProductList({ products }: { products: Product[] }) {
 - **Zustand**：輕量全域狀態管理，搭配 selector 與 persist middleware
 - **效能最佳化**：React.memo、useMemo、useCallback 的正確使用時機
 
-延伸閱讀：
-
-- **React 函式元件與 Hooks**：`06-Frontend/01 React 函式元件與 Hooks.md`
-- **TypeScript 基礎**：`06-Frontend/02 TypeScript 基礎.md`
+> **延伸閱讀**：
+> - [01 React 函式元件與 Hooks](01%20React%20函式元件與%20Hooks.md) — useState、useEffect 等基礎 Hooks 的使用方式
+> - [06 前端建置工具（Vite）](06%20前端建置工具（Vite）.md) — 搭配 Vite 建置 React 專案與打包最佳化

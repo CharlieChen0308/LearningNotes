@@ -1,5 +1,7 @@
 # 02 ChatClient API 與對話模型
 
+> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+
 ## ChatClient 簡介
 
 `ChatClient` 是 Spring AI 中與 AI 模型互動的核心 API，設計風格類似於 Spring 的 `WebClient` 和 `RestClient`——採用流暢式 API（Fluent API），支援同步和串流呼叫。
@@ -217,3 +219,8 @@ public class ConversationController {
 ## 小結
 
 ChatClient 是 Spring AI 的核心入口，透過流暢的 API 設計，開發者可以輕鬆實現單輪對話、串流輸出、Prompt 模板和模型參數調整。配合 Spring Boot 的自動配置，只需極少的程式碼即可構建 AI 對話功能。
+
+## 延伸閱讀
+
+- [03 結構化輸出](03%20結構化輸出.md) — 將 AI 回應自動對映為 Java 物件
+- [07 Advisors API 與對話記憶](07%20Advisors%20API%20與對話記憶.md) — 攔截器模式與多輪對話記憶管理

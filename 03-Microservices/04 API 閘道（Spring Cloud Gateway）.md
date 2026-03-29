@@ -1,5 +1,7 @@
 # 04 API 閘道（Spring Cloud Gateway）
 
+> **版本**：Spring Cloud 2023.x / Spring Boot 3.x / Java 17+
+
 ## 什麼是 API 閘道
 
 API 閘道是微服務架構中的統一入口，所有外部請求都先經過閘道，再由閘道路由到對應的微服務。閘道可以處理：
@@ -227,3 +229,8 @@ public KeyResolver ipKeyResolver() {
 ## 小結
 
 Spring Cloud Gateway 是微服務架構中的重要元件，作為統一入口提供了路由、過濾、限流、熔斷等功能。它基於 WebFlux 的非同步非阻塞模型，具有出色的效能表現。
+
+## 延伸閱讀
+
+- [05 熔斷與限流（Resilience4j）](05%20%E7%86%94%E6%96%B7%E8%88%87%E9%99%90%E6%B5%81%EF%BC%88Resilience4j%EF%BC%89.md) — 容錯與限流機制
+- [01 Spring Cloud 概述與微服務架構](01%20Spring%20Cloud%20%E6%A6%82%E8%BF%B0%E8%88%87%E5%BE%AE%E6%9C%8D%E5%8B%99%E6%9E%B6%E6%A7%8B.md) — 微服務架構總覽

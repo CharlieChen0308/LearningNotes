@@ -1,5 +1,7 @@
 # 07 宣告式 HTTP 用戶端（OpenFeign）
 
+> **版本**：Spring Cloud 2023.x / Spring Boot 3.x / Java 17+
+
 ## 為什麼需要 OpenFeign
 
 在微服務架構中，服務間需要頻繁地進行 HTTP 呼叫。使用 RestTemplate 雖然可行，但程式碼較為繁瑣，需要手動拼接 URL、處理參數序列化等。
@@ -241,3 +243,8 @@ spring:
 ## 小結
 
 OpenFeign 透過宣告式的方式大幅簡化了微服務間的 HTTP 呼叫，搭配 LoadBalancer 和 Resilience4j，可以輕鬆實現負載均衡和容錯處理。它是 Spring Cloud 微服務開發中最常用的元件之一。
+
+## 延伸閱讀
+
+- [08 宣告式 HTTP 用戶端（HTTP Interface）](08%20%E5%AE%A3%E5%91%8A%E5%BC%8F%20HTTP%20%E7%94%A8%E6%88%B6%E7%AB%AF%EF%BC%88HTTP%20Interface%EF%BC%89.md) — Spring 6 原生 HTTP 用戶端
+- [06 負載均衡（Spring Cloud LoadBalancer）](06%20%E8%B2%A0%E8%BC%89%E5%9D%87%E8%A1%A1%EF%BC%88Spring%20Cloud%20LoadBalancer%EF%BC%89.md) — 用戶端負載均衡

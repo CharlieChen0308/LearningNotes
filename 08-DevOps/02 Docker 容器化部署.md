@@ -433,3 +433,7 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 
 - **Kubernetes（K8s）**：容器編排平台，管理大規模容器叢集的部署、擴縮與自我修復
 - **CI/CD 整合**：將 Docker 建置整合到 GitHub Actions、GitLab CI 等持續整合流程中，實現自動化建置與部署
+
+> **延伸閱讀**：
+> - [03 Kubernetes 入門](03%20Kubernetes%20入門.md) — 容器編排與叢集管理的下一步
+> - [01 Gradle 建置工具](01%20Gradle%20建置工具.md) — 搭配 Gradle 建置 Spring Boot JAR 供 Docker 打包

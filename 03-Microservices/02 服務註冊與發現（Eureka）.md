@@ -1,5 +1,7 @@
 # 02 服務註冊與發現（Eureka）
 
+> **版本**：Spring Cloud 2023.x / Spring Boot 3.x / Java 17+
+
 ## 什麼是服務註冊與發現
 
 在微服務架構中，服務例項的數量和網路位置可能動態變化。服務註冊與發現機制讓各服務能自動註冊自身資訊，並能查詢其他服務的位置，無需寫死 IP 和連接埠。
@@ -202,3 +204,8 @@ spring:
 ## 小結
 
 服務註冊與發現是微服務架構的基礎設施。Eureka 提供了簡單可靠的解決方案，而 Nacos 則是目前更受歡迎的替代選擇，它整合了服務發現與配置管理功能。
+
+## 延伸閱讀
+
+- [01 Spring Cloud 概述與微服務架構](01%20Spring%20Cloud%20%E6%A6%82%E8%BF%B0%E8%88%87%E5%BE%AE%E6%9C%8D%E5%8B%99%E6%9E%B6%E6%A7%8B.md) — 微服務架構總覽
+- [06 負載均衡（Spring Cloud LoadBalancer）](06%20%E8%B2%A0%E8%BC%89%E5%9D%87%E8%A1%A1%EF%BC%88Spring%20Cloud%20LoadBalancer%EF%BC%89.md) — 用戶端負載均衡

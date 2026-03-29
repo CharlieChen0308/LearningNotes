@@ -1,5 +1,7 @@
 # 01 Spring Cloud 概述與微服務架構
 
+> **版本**：Spring Cloud 2023.x / Spring Boot 3.x / Java 17+
+
 ## 什麼是 Spring Cloud
 
 Spring Cloud 是基於 Spring Boot 的微服務架構開發工具集，它提供了一系列框架來快速構建分散式系統中的常見模式，例如：服務發現、配置管理、智慧路由、負載均衡、熔斷機制、訊息匯流排等。
@@ -104,3 +106,8 @@ microservice-demo/
 ## 小結
 
 Spring Cloud 為微服務架構提供了完整的解決方案，透過整合各種成熟的開源元件，讓開發者能夠快速搭建分散式系統。後續章節將逐一介紹各核心元件的配置和使用。
+
+## 延伸閱讀
+
+- [02 服務註冊與發現（Eureka）](02%20%E6%9C%8D%E5%8B%99%E8%A8%BB%E5%86%8A%E8%88%87%E7%99%BC%E7%8F%BE%EF%BC%88Eureka%EF%BC%89.md) — 服務發現機制
+- [04 API 閘道（Spring Cloud Gateway）](04%20API%20%E9%96%98%E9%81%93%EF%BC%88Spring%20Cloud%20Gateway%EF%BC%89.md) — 統一入口與路由

@@ -1,5 +1,7 @@
 # 05 RAG 檢索增強生成
 
+> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+
 ## 什麼是 RAG
 
 RAG（Retrieval Augmented Generation，檢索增強生成）是一種結合資訊檢索和文字生成的技術，解決了 AI 模型的兩大限制：
@@ -226,3 +228,8 @@ record ImportRequest(List<String> texts, String category) {}
 ## 小結
 
 RAG 是將 AI 模型與企業知識庫結合的關鍵技術。Spring AI 的 `QuestionAnswerAdvisor` 提供了開箱即用的 RAG 方案，搭配 `VectorStore` 和 ETL Pipeline，可以快速構建基於企業資料的智慧問答系統。
+
+## 延伸閱讀
+
+- [04 Embedding 與向量資料庫](04%20Embedding%20與向量資料庫.md) — Embedding 原理與向量資料庫操作基礎
+- [07 Advisors API 與對話記憶](07%20Advisors%20API%20與對話記憶.md) — Advisors 攔截器模式與 QuestionAnswerAdvisor 進階用法

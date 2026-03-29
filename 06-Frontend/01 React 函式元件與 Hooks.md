@@ -1,4 +1,4 @@
-# 06 現代 React 開發：函式元件與 Hooks
+# 01 React 函式元件與 Hooks
 
 > 本系列前五篇使用 React 15.x 的 `React.createClass` 和 CDN 引入方式。本篇對照 React 官方文件（react.dev），補充現代 React 19 的開發方式——函式元件（Function Components）與 Hooks。
 
@@ -282,3 +282,7 @@ export default TodoApp;
 ## 小結
 
 React 19 的函式元件 + Hooks 是現代 React 開發的標準方式，完全取代了 `React.createClass` 和 class 元件。`useState` 管理狀態、`useEffect` 處理副作用、函式參數接收 Props——整體更加簡潔直覺。
+
+> **延伸閱讀**：
+> - [05 React 進階與狀態管理](05%20React%20進階與狀態管理.md) — useContext、useReducer、React Router、Zustand 與效能最佳化
+> - [02 TypeScript 基礎](02%20TypeScript%20基礎.md) — 為 React 元件加上型別安全

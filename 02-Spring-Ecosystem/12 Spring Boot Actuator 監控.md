@@ -272,3 +272,7 @@ management:
 ## 小結
 
 Spring Boot Actuator 是生產環境不可或缺的工具，提供了健康檢查、指標監控、日誌動態調整等功能。搭配 Prometheus + Grafana 可以建立完整的可觀測性方案，讓維運團隊即時掌握系統狀態。
+
+> **延伸閱讀**：
+> - [04 Spring Boot 自動配置與 Starters](04%20Spring%20Boot%20自動配置與%20Starters.md) — 理解 Actuator Starter 背後的自動配置機制
+> - [05 Spring Boot 配置檔案與 Profiles](05%20Spring%20Boot%20配置檔案與%20Profiles.md) — 依環境切換 Actuator 暴露端點與安全設定

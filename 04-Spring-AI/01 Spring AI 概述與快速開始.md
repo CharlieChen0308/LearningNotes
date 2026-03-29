@@ -1,5 +1,7 @@
 # 01 Spring AI 概述與快速開始
 
+> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+
 ## 什麼是 Spring AI
 
 Spring AI 是 Spring 官方推出的 AI 應用開發框架，目標是將 Spring 生態系統的設計原則（如可移植性、模組化設計）帶入 AI 領域，讓 Java 開發者能輕鬆構建 AI 驅動的應用程式。
@@ -156,3 +158,8 @@ String response = chatClient.prompt()
 ## 小結
 
 Spring AI 讓 Java 開發者能用熟悉的 Spring 方式開發 AI 應用，統一的 API 抽象使得切換 AI 提供者變得輕而易舉。後續章節將深入介紹 ChatClient、Prompt 模板、Function Calling、RAG 等核心功能。
+
+## 延伸閱讀
+
+- [02 ChatClient API 與對話模型](02%20ChatClient%20API%20與對話模型.md) — 深入了解 ChatClient 的流暢式 API 與對話功能
+- [06 Function Calling 工具呼叫](06%20Function%20Calling%20工具呼叫.md) — 讓 AI 模型呼叫自訂函式擴展能力

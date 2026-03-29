@@ -1,5 +1,7 @@
 # 04 Embedding 與向量資料庫
 
+> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+
 ## 什麼是 Embedding
 
 Embedding（嵌入向量）是將文字轉換為數值向量的過程。每段文字會被轉換為一個高維度的浮點數陣列，語義相似的文字在向量空間中的距離會比較接近。
@@ -216,3 +218,7 @@ public class DocumentIngestionService {
 ## 小結
 
 Embedding 和向量資料庫是 AI 應用的重要基礎設施。Spring AI 透過統一的 `EmbeddingModel` 和 `VectorStore` 介面，讓開發者可以輕鬆實現語義搜尋和文件管理，為 RAG 應用奠定基礎。
+
+## 延伸閱讀
+
+- [05 RAG 檢索增強生成](05%20RAG%20檢索增強生成.md) — 運用 Embedding 與向量資料庫實現檢索增強生成

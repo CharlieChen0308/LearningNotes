@@ -555,3 +555,7 @@ server {
 - [Vite 官方文件](https://vite.dev/)
 - [Rollup 官方文件](https://rollupjs.org/)
 - [Awesome Vite](https://github.com/vitejs/awesome-vite) -- 社群 Plugin 與模板合集
+
+> **延伸閱讀**：
+> - [03 Vue 3 Composition API](03%20Vue%203%20Composition%20API.md) — 搭配 Vite 開發 Vue 3 專案的核心語法
+> - [01 React 函式元件與 Hooks](01%20React%20函式元件與%20Hooks.md) — 搭配 Vite 開發 React 專案的基礎知識

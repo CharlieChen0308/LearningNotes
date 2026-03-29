@@ -1,5 +1,7 @@
 # 05 熔斷與限流（Resilience4j）
 
+> **版本**：Spring Cloud 2023.x / Spring Boot 3.x / Java 17+
+
 ## 服務雪崩問題
 
 在微服務架構中，服務間存在呼叫鏈。當某個服務出現故障或回應緩慢時，呼叫它的服務也會被拖慢，進而影響更上層的服務，最終導致整個系統崩潰——這就是「服務雪崩」。
@@ -220,3 +222,8 @@ management:
 ## 小結
 
 Resilience4j 提供了完整的微服務容錯方案，透過熔斷、限流、重試、隔離等機制，有效防止服務雪崩，提升系統的整體穩定性。
+
+## 延伸閱讀
+
+- [04 API 閘道（Spring Cloud Gateway）](04%20API%20%E9%96%98%E9%81%93%EF%BC%88Spring%20Cloud%20Gateway%EF%BC%89.md) — Gateway 整合熔斷器
+- [07 宣告式 HTTP 用戶端（OpenFeign）](07%20%E5%AE%A3%E5%91%8A%E5%BC%8F%20HTTP%20%E7%94%A8%E6%88%B6%E7%AB%AF%EF%BC%88OpenFeign%EF%BC%89.md) — Feign 整合 Resilience4j

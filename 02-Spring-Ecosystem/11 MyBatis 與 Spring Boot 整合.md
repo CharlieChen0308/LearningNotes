@@ -260,3 +260,7 @@ public class UserService {
 ## 小結
 
 MyBatis 與 Spring Boot 的整合透過 Starter 實現了零配置啟動。註解式開發適合簡單場景，XML 的動態 SQL 功能則適合複雜查詢。搭配駝峰命名自動對映和 PageHelper 分頁，可以大幅減少樣板程式碼。
+
+> **延伸閱讀**：
+> - [16 MyBatis-Plus 快速開發](16%20MyBatis-Plus%20快速開發.md) — 基於 MyBatis 的增強框架，進一步簡化 CRUD 開發
+> - [10 Spring Data JPA](10%20Spring%20Data%20JPA.md) — 另一種 ORM 方案，與 MyBatis 的設計理念對比

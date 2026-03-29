@@ -1,5 +1,7 @@
 # 07 Advisors API 與對話記憶
 
+> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+
 ## 什麼是 Advisors
 
 Advisors 是 Spring AI 中的攔截器模式，類似於 Spring MVC 的 `HandlerInterceptor` 或 AOP 的概念。Advisors 可以在 AI 請求發送前和回應返回後進行處理，用於封裝常見的 AI 互動模式。
@@ -234,3 +236,8 @@ MessageChatMemoryAdvisor.builder(chatMemory)
 ## 小結
 
 Advisors API 是 Spring AI 的核心設計模式，透過攔截器鏈的方式組合各種 AI 互動能力。對話記憶讓 AI 應用能夠進行連續的多輪對話，而自訂 Advisor 則能靈活地加入日誌、安全過濾等橫切關注點。
+
+## 延伸閱讀
+
+- [02 ChatClient API 與對話模型](02%20ChatClient%20API%20與對話模型.md) — ChatClient 基礎用法與 Prompt 模板
+- [05 RAG 檢索增強生成](05%20RAG%20檢索增強生成.md) — 使用 QuestionAnswerAdvisor 實現檢索增強生成

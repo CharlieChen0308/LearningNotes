@@ -1,5 +1,7 @@
 # 06 Function Calling 工具呼叫
 
+> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+
 > **注意**：本篇使用 Spring AI pre-1.0 API。Spring AI 1.0+ 已改用 `@Tool` 註解取代 `@Bean Function` 方式，後續將更新本篇。
 
 
@@ -205,3 +207,8 @@ public Function<OrderQuery, OrderStatus> queryOrder() {
 ## 小結
 
 Function Calling 大幅擴展了 AI 模型的能力邊界，讓 AI 可以存取即時資料並執行操作。Spring AI 透過 `@Bean` 定義和 `FunctionCallback` 兩種方式，讓開發者能輕鬆將既有的業務邏輯暴露給 AI 模型使用。
+
+## 延伸閱讀
+
+- [02 ChatClient API 與對話模型](02%20ChatClient%20API%20與對話模型.md) — ChatClient 基礎用法與模型參數調整
+- [07 Advisors API 與對話記憶](07%20Advisors%20API%20與對話記憶.md) — 使用 Advisors 組合 Function Calling 與其他 AI 互動模式

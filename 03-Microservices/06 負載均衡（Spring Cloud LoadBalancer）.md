@@ -1,5 +1,7 @@
 # 06 負載均衡（Spring Cloud LoadBalancer）
 
+> **版本**：Spring Cloud 2023.x / Spring Boot 3.x / Java 17+
+
 ## 什麼是負載均衡
 
 負載均衡是將網路流量分散到多個服務例項上，以提高系統的可用性和吞吐量。在微服務架構中，同一個服務通常會部署多個例項。
@@ -214,3 +216,8 @@ public interface UserClient {
 ## 小結
 
 Spring Cloud LoadBalancer 提供了簡單而強大的用戶端負載均衡能力。透過 `@LoadBalanced` 註解和內建策略，開發者可以輕鬆實現微服務間的負載均衡，同時也支援自訂策略以滿足特殊需求。
+
+## 延伸閱讀
+
+- [02 服務註冊與發現（Eureka）](02%20%E6%9C%8D%E5%8B%99%E8%A8%BB%E5%86%8A%E8%88%87%E7%99%BC%E7%8F%BE%EF%BC%88Eureka%EF%BC%89.md) — 服務發現機制
+- [07 宣告式 HTTP 用戶端（OpenFeign）](07%20%E5%AE%A3%E5%91%8A%E5%BC%8F%20HTTP%20%E7%94%A8%E6%88%B6%E7%AB%AF%EF%BC%88OpenFeign%EF%BC%89.md) — OpenFeign 內建 LoadBalancer 支援

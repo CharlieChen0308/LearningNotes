@@ -673,3 +673,7 @@ spotless {
 - [Spring Boot Gradle Plugin 文件](https://docs.spring.io/spring-boot/gradle-plugin/)
 - [Gradle Kotlin DSL Primer](https://docs.gradle.org/current/userguide/kotlin_dsl.html)
 - [Version Catalog 官方指南](https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog)
+
+> **延伸閱讀**：
+> - [02 Docker 容器化部署](02%20Docker%20容器化部署.md) — 將 Gradle 建置產出打包為 Docker 映像檔
+> - [06 CI／CD 流程（GitHub Actions）](06%20CI／CD%20流程（GitHub%20Actions）.md) — 在 CI 管線中整合 Gradle 建置與測試
