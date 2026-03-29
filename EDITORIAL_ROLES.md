@@ -101,6 +101,24 @@
 | Microservices | 微服務 | — |
 | Load Balancer | 負載均衡器 | — |
 | Circuit Breaker | 熔斷器 | — |
+| Refactoring | 重構 | — |
+| Technical Debt | 技術債 | 技術債務 |
+| Code Smell | 程式碼異味 | 代碼壞味道 |
+| Sprint | Sprint（不翻譯） | 衝刺 |
+| User Story | 使用者故事 | 用戶故事 |
+| Domain-Driven Design | 領域驅動設計 | — |
+| Bounded Context | 界限上下文 | 限界上下文 |
+| Aggregate | 聚合 | 聚合根（指 Aggregate Root 時） |
+| Observability | 可觀測性 | 可觀察性 |
+| Structured Logging | 結構化日誌 | — |
+| Distributed Tracing | 分散式追蹤 | 分佈式追蹤 |
+| Idempotency | 冪等性 | 幂等性 |
+| Saga Pattern | Saga 模式 | — |
+| Dead Letter Queue | 死信佇列 | 死信隊列 |
+| Connection Pool | 連線池 | 連接池 |
+| Profiling | 效能剖析 | — |
+| Trade-off | 取捨 | — |
+| Anti-pattern | 反模式 | 反面模式 |
 
 **審查清單**：
 - [ ] 術語統一，無混用
@@ -148,12 +166,48 @@
 
 ---
 
+### 6. 軟體工程與架構審查員（SE & Architecture Reviewer）
+
+**職責**：確保軟體工程方法論、架構模式、安全/效能建議的正確性與實務可行性
+
+- 設計原則（SOLID/DRY/KISS）的解釋是否符合原始定義
+- 架構模式（Hexagonal/DDD/CQRS/Event Sourcing）描述是否與業界共識一致
+- 安全建議是否符合 OWASP 最新版
+- 效能建議是否基於實測數據而非臆測
+- 可觀測性方案是否符合 OpenTelemetry 規範
+- 每個方案是否包含取捨分析（Trade-off）
+- 方法論建議對目標讀者（2-3 年 Java 工程師）是否可操作
+
+**權威來源對照**：
+
+| 主題 | 對照標準 |
+|------|---------|
+| SOLID 原則 | Robert C. Martin《Clean Architecture》 |
+| 重構 | Martin Fowler《Refactoring》 |
+| DDD | Eric Evans《Domain-Driven Design》 |
+| 設計模式 | GoF《Design Patterns》 |
+| 安全 | OWASP Top 10（2025 版） |
+| 可觀測性 | OpenTelemetry Specification |
+| 效能 | 實測數據 + JVM 官方文件 |
+
+**審查清單**：
+- [ ] 每個原則/模式有「解決什麼問題」和「不用會怎樣」的說明
+- [ ] 每篇至少 1 個反面教材（錯誤示範 → 正確示範）
+- [ ] 每個架構決策有取捨分析（何時適用、何時不適用）
+- [ ] 程式碼範例可在 Spring Boot 3.x 專案中直接使用
+- [ ] 引述的原則定義與原始出處一致（非二手詮釋）
+- [ ] 安全/效能數據有明確來源
+- [ ] 至少 1 個真實業務場景的應用說明
+
+---
+
 ## 審查流程
 
 ```mermaid
 flowchart LR
     A[文章完成] --> B[技術審查員]
-    B --> C[內容編輯]
+    B --> B2[SE 架構審查員]
+    B2 --> C[內容編輯]
     C --> D[術語校對員]
     D --> E[跨篇一致性審查員]
     E --> F[讀者體驗測試員]
@@ -163,12 +217,15 @@ flowchart LR
     I --> G
 ```
 
+> **注意**：SE 架構審查員僅審查 09-Software-Engineering 篇章。其他目錄的文章仍走 5 人流程。
+
 **審查狀態標記**（加在每篇文章底部）：
 
 ```markdown
 ---
 審查狀態：
 - [ ] 技術審查
+- [ ] SE 架構審查（僅 09-Software-Engineering）
 - [ ] 內容編輯
 - [ ] 術語校對
 - [ ] 跨篇一致性

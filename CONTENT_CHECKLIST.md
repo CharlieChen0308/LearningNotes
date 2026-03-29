@@ -657,6 +657,122 @@
 
 ---
 
+## 9. 軟體工程（Software Engineering）
+
+> 目錄：`09-Software-Engineering/`
+
+### 9.1 SOLID 原則與 Clean Code（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.1.1 | SRP 單一職責原則 + Spring Service 拆分 | `[x]` | 01 SOLID |
+| 9.1.2 | OCP 開放封閉原則 + Strategy Pattern 範例 | `[x]` | 01 |
+| 9.1.3 | LSP 里氏替換原則 + 繼承陷阱 | `[x]` | 01 |
+| 9.1.4 | ISP 介面隔離原則 + 胖介面拆分 | `[x]` | 01 |
+| 9.1.5 | DIP 依賴反轉原則 + Spring DI 對應 | `[x]` | 01 |
+| 9.1.6 | Clean Code 命名 / 函式 / 註解原則 | `[x]` | 01 |
+| 9.1.7 | Clean Architecture 分層概念 | `[x]` | 01 |
+
+### 9.2 設計模式實戰應用（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.2.1 | Factory Method + Spring BeanFactory | `[x]` | 02 設計模式 |
+| 9.2.2 | Builder Pattern + Lombok @Builder | `[x]` | 02 |
+| 9.2.3 | Singleton + Spring Bean Scope | `[x]` | 02 |
+| 9.2.4 | Decorator + Filter Chain | `[x]` | 02 |
+| 9.2.5 | Proxy + Spring AOP | `[x]` | 02 |
+| 9.2.6 | Strategy + Spring 多實作注入 | `[x]` | 02 |
+| 9.2.7 | Template Method + JdbcTemplate | `[x]` | 02 |
+| 9.2.8 | Observer + Spring Event | `[x]` | 02 |
+| 9.2.9 | Chain of Responsibility + Filter/Interceptor | `[x]` | 02 |
+
+### 9.3 軟體架構模式（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.3.1 | 分層架構（Layered Architecture） | `[x]` | 03 架構模式 |
+| 9.3.2 | 六角架構（Hexagonal / Ports & Adapters） | `[x]` | 03 |
+| 9.3.3 | DDD 戰術設計（Entity / VO / Aggregate） | `[x]` | 03 |
+| 9.3.4 | CQRS 命令查詢分離 | `[x]` | 03 |
+| 9.3.5 | Event-Driven Architecture | `[x]` | 03 |
+| 9.3.6 | Saga Pattern（分散式交易） | `[x]` | 03 |
+
+### 9.4 API 設計最佳實踐（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.4.1 | Richardson 成熟度模型（Level 0-3） | `[x]` | 04 API 設計 |
+| 9.4.2 | URL 命名 / HTTP 動詞 / 狀態碼 | `[x]` | 04 |
+| 9.4.3 | API 版本策略（URL / Header / Query） | `[x]` | 04 |
+| 9.4.4 | 統一錯誤格式 + RFC 7807 Problem Details | `[x]` | 04 |
+| 9.4.5 | 分頁 / 過濾 / 排序 | `[x]` | 04 |
+| 9.4.6 | 冪等性設計 | `[x]` | 04 |
+
+### 9.5 日誌、監控與可觀測性（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.5.1 | 可觀測性三支柱（Logs / Metrics / Traces） | `[x]` | 05 可觀測性 |
+| 9.5.2 | SLF4J + Logback 結構化日誌 | `[x]` | 05 |
+| 9.5.3 | Micrometer + Prometheus 指標收集 | `[x]` | 05 |
+| 9.5.4 | OpenTelemetry 分散式追蹤 | `[x]` | 05 |
+| 9.5.5 | Grafana 視覺化 | `[x]` | 05 |
+
+### 9.6 安全開發實踐（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.6.1 | OWASP Top 10 與 Java 防護 | `[x]` | 06 安全開發 |
+| 9.6.2 | SQL 注入防護（JPA / MyBatis） | `[x]` | 06 |
+| 9.6.3 | XSS / CSRF 防護 | `[x]` | 06 |
+| 9.6.4 | 存取控制（IDOR 防護） | `[x]` | 06 |
+| 9.6.5 | 輸入驗證策略（白名單 > 黑名單） | `[x]` | 06 |
+| 9.6.6 | Secrets 管理 | `[x]` | 06 |
+
+### 9.7 效能調校與壓力測試（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.7.1 | JVM 調校（GC 選擇 / 記憶體參數） | `[x]` | 07 效能調校 |
+| 9.7.2 | HikariCP 連線池調校 | `[x]` | 07 |
+| 9.7.3 | 效能反模式（N+1 / 迴圈遠端呼叫 / 全表掃描） | `[x]` | 07 |
+| 9.7.4 | JMeter 壓力測試策略 | `[x]` | 07 |
+| 9.7.5 | Profiling 工具（VisualVM / async-profiler / Arthas） | `[x]` | 07 |
+
+### 9.8 程式碼審查與重構（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.8.1 | Code Review 流程與 Checklist | `[x]` | 08 程式碼審查 |
+| 9.8.2 | 程式碼異味（Long Method / Large Class / Feature Envy） | `[x]` | 08 |
+| 9.8.3 | 重構手法（Extract Method / Replace Conditional with Polymorphism） | `[x]` | 08 |
+| 9.8.4 | 技術債管理（分類 / Boy Scout Rule / 20% 時間） | `[x]` | 08 |
+
+### 9.9 系統設計入門（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.9.1 | 高可用設計（消除單點故障 / 健康檢查） | `[x]` | 09 系統設計 |
+| 9.9.2 | 水平擴展 vs 垂直擴展 + 無狀態設計 | `[x]` | 09 |
+| 9.9.3 | CAP 定理 + 最終一致性 | `[x]` | 09 |
+| 9.9.4 | 訊息佇列（RabbitMQ / Kafka / Redis Stream 比較） | `[x]` | 09 |
+| 9.9.5 | 微服務拆分依據 | `[x]` | 09 |
+| 9.9.6 | Twelve-Factor App | `[x]` | 09 |
+
+### 9.10 敏捷開發與團隊協作（Phase 5: 新寫）
+
+| # | 子項目 | 覆蓋 | 來源篇章 |
+|---|--------|------|---------|
+| 9.10.1 | Scrum 框架（角色 / 事件 / 工件） | `[x]` | 10 敏捷開發 |
+| 9.10.2 | User Story + 驗收標準 | `[x]` | 10 |
+| 9.10.3 | Story Point 估算 + Velocity | `[x]` | 10 |
+| 9.10.4 | 看板（Kanban）+ WIP 限制 | `[x]` | 10 |
+| 9.10.5 | ADR（架構決策紀錄） | `[x]` | 10 |
+| 9.10.6 | 技術文件撰寫（Docs as Code） | `[x]` | 10 |
+
+---
+
 ## 覆蓋度統計
 
 | 技術層級 | 子項目數 | 覆蓋率 |
@@ -669,6 +785,7 @@
 | 6. Frontend（Vue/React/TS） | 35 | 100% |
 | 7. CS Fundamentals | 28 | 100% |
 | 8. DevOps | 48 | 100% |
-| **合計** | **321** | **100%** |
+| 9. Software Engineering | 58 | 100% |
+| **合計** | **379** | **100%** |
 
-> 所有 321 個子項目已完整覆蓋，分佈在 61 篇文章中。
+> 所有 379 個子項目已完整覆蓋，分佈在 71 篇文章中。

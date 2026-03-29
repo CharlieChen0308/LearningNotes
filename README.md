@@ -1,7 +1,7 @@
 # LearningNotes
 
 > Java 全端工程師學習筆記 — 以 Java 17/21 + Spring Boot 3.x 為基準，涵蓋後端、前端、資料庫、微服務、AI、DevOps。
-> 共 61 篇文章，8 大主題。
+> 共 71 篇文章，9 大主題。
 
 ---
 
@@ -132,6 +132,24 @@
 
 ---
 
+### 09 Software Engineering
+> SOLID / 設計模式 / 架構模式 / API 設計 / 可觀測性 / 安全 / 效能 / 重構 / 系統設計 / 敏捷
+
+| # | 文章 |
+|---|------|
+| 01 | [SOLID 原則與 Clean Code](09-Software-Engineering/01%20SOLID%20原則與%20Clean%20Code.md) |
+| 02 | [設計模式實戰應用](09-Software-Engineering/02%20設計模式實戰應用.md) |
+| 03 | [軟體架構模式](09-Software-Engineering/03%20軟體架構模式.md) |
+| 04 | [API 設計最佳實踐](09-Software-Engineering/04%20API%20設計最佳實踐.md) |
+| 05 | [日誌、監控與可觀測性](09-Software-Engineering/05%20日誌、監控與可觀測性.md) |
+| 06 | [安全開發實踐](09-Software-Engineering/06%20安全開發實踐.md) |
+| 07 | [效能調校與壓力測試](09-Software-Engineering/07%20效能調校與壓力測試.md) |
+| 08 | [程式碼審查與重構](09-Software-Engineering/08%20程式碼審查與重構.md) |
+| 09 | [系統設計入門](09-Software-Engineering/09%20系統設計入門.md) |
+| 10 | [敏捷開發與團隊協作](09-Software-Engineering/10%20敏捷開發與團隊協作.md) |
+
+---
+
 ## 閱讀路線建議
 
 ### 後端工程師路線
@@ -143,11 +161,8 @@
 ### AI 應用路線
 01-Java-Core (01-02) → 02-Spring-Ecosystem (01, 04-06) → 04-Spring-AI
 
----
-
-## 舊文歸檔
-
-重構前的所有原始文章保存在 [`_archive/`](_archive/) 目錄中。
+### 進階工程師路線（Junior → Senior）
+09-Software-Engineering (01-03) → 09 (05-07) → 09 (04, 08-10)
 
 ---
 
