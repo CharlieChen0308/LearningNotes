@@ -63,7 +63,7 @@ LearningNotes/
 | 0.1 | 建立新目錄結構（8 個資料夾 + `_archive/`） | `[x]` |
 | 0.2 | 將所有舊目錄整批移入 `_archive/`（Algorithm, Data Structure, Java Basis, JavaWeb, JVM, Struts2, Hibernate, Spring, Spring MVC, Mybatis, Spring Boot, Spring Cloud, Spring AI, React, Maven, MySQL, nguSeckill, Spider, Interview, js, _posts, Appendix） | `[x]` |
 | 0.3 | 更新 README.md 為新目錄結構的索引 | `[x]` |
-| 0.4 | Git commit：`refactor: Phase 0 — 建立新結構，舊文歸檔` | `[ ]` |
+| 0.4 | Git commit：`refactor: Phase 0 — 建立新結構，舊文歸檔` | `[x]` |
 
 ---
 
@@ -75,49 +75,49 @@ LearningNotes/
 
 | # | 新檔名 | 來源 | 微調項目 | 狀態 |
 |---|--------|------|---------|------|
-| 1.1 | 01 Spring Core — DI 與 IoC.md | Spring/02 | 更新交叉引用路徑 | `[ ]` |
-| 1.2 | 02 Spring AOP 註解式開發.md | Spring/07 | 更新交叉引用路徑 | `[ ]` |
-| 1.3 | 03 Spring Java 配置與註解驅動.md | Spring/06 | 更新交叉引用路徑 | `[ ]` |
-| 1.4 | 04 Spring Boot 自動配置與 Starters.md | Spring Boot/02 | 無 | `[ ]` |
-| 1.5 | 05 Spring Boot 配置檔案與 Profiles.md | Spring Boot/03 | 無 | `[ ]` |
-| 1.6 | 06 Spring Boot RESTful API 開發.md | Spring Boot/04 | 無 | `[ ]` |
-| 1.7 | 07 Spring MVC 註解驅動與 RESTful.md | Spring MVC/02 | 無 | `[ ]` |
-| 1.8 | 08 Spring MVC 例外處理與驗證.md | Spring MVC/03 | 無 | `[ ]` |
-| 1.9 | 09 Spring MVC 攔截器與跨域.md | Spring MVC/04 | 無 | `[ ]` |
-| 1.10 | 10 Spring Data JPA.md | Hibernate/02 | 無 | `[ ]` |
-| 1.11 | 11 MyBatis 與 Spring Boot 整合.md | Mybatis/03 | 無 | `[ ]` |
-| 1.12 | 12 Spring Boot Actuator 監控.md | Spring Boot/05 | 無 | `[ ]` |
-| 1.28 | 13 Spring 事務管理.md | _posts/Spring事務 + Spring/05 | 合併：加入 @Transactional 實際範例；建構子注入推薦 | `[ ]` |
+| 1.1 | 01 Spring Core — DI 與 IoC.md | Spring/02 | 更新交叉引用路徑 | `[x]` |
+| 1.2 | 02 Spring AOP 註解式開發.md | Spring/07 | 更新交叉引用路徑 | `[x]` |
+| 1.3 | 03 Spring Java 配置與註解驅動.md | Spring/06 | 更新交叉引用路徑 | `[x]` |
+| 1.4 | 04 Spring Boot 自動配置與 Starters.md | Spring Boot/02 | 無 | `[x]` |
+| 1.5 | 05 Spring Boot 配置檔案與 Profiles.md | Spring Boot/03 | 無 | `[x]` |
+| 1.6 | 06 Spring Boot RESTful API 開發.md | Spring Boot/04 | 無 | `[x]` |
+| 1.7 | 07 Spring MVC 註解驅動與 RESTful.md | Spring MVC/02 | 無 | `[x]` |
+| 1.8 | 08 Spring MVC 例外處理與驗證.md | Spring MVC/03 | 無 | `[x]` |
+| 1.9 | 09 Spring MVC 攔截器與跨域.md | Spring MVC/04 | 無 | `[x]` |
+| 1.10 | 10 Spring Data JPA.md | Hibernate/02 | 無 | `[x]` |
+| 1.11 | 11 MyBatis 與 Spring Boot 整合.md | Mybatis/03 | 無 | `[x]` |
+| 1.12 | 12 Spring Boot Actuator 監控.md | Spring Boot/05 | 無 | `[x]` |
+| 1.28 | 13 Spring 事務管理.md | _posts/Spring事務 + Spring/05 | 合併：加入 @Transactional 實際範例；建構子注入推薦 | `[x]` |
 
 #### 03-Microservices/
 
 | # | 新檔名 | 來源 | 微調項目 | 狀態 |
 |---|--------|------|---------|------|
-| 1.13 | 01 Spring Cloud 概述與微服務架構.md | Spring Cloud/01 | 無 | `[ ]` |
-| 1.14 | 02 服務註冊與發現（Eureka）.md | Spring Cloud/02 | 補充 Eureka 維護模式一句話 | `[ ]` |
-| 1.15 | 03 配置中心（Spring Cloud Config）.md | Spring Cloud/03 | 無 | `[ ]` |
-| 1.16 | 04 API 閘道（Spring Cloud Gateway）.md | Spring Cloud/04 | 無 | `[ ]` |
-| 1.17 | 05 熔斷與限流（Resilience4j）.md | Spring Cloud/05 | 無 | `[ ]` |
-| 1.18 | 06 負載均衡（Spring Cloud LoadBalancer）.md | Spring Cloud/06 | 無 | `[ ]` |
-| 1.19 | 07 宣告式 HTTP 用戶端（OpenFeign）.md | Spring Cloud/07 | 無 | `[ ]` |
+| 1.13 | 01 Spring Cloud 概述與微服務架構.md | Spring Cloud/01 | 無 | `[x]` |
+| 1.14 | 02 服務註冊與發現（Eureka）.md | Spring Cloud/02 | 補充 Eureka 維護模式一句話 | `[x]` |
+| 1.15 | 03 配置中心（Spring Cloud Config）.md | Spring Cloud/03 | 無 | `[x]` |
+| 1.16 | 04 API 閘道（Spring Cloud Gateway）.md | Spring Cloud/04 | 無 | `[x]` |
+| 1.17 | 05 熔斷與限流（Resilience4j）.md | Spring Cloud/05 | 無 | `[x]` |
+| 1.18 | 06 負載均衡（Spring Cloud LoadBalancer）.md | Spring Cloud/06 | 無 | `[x]` |
+| 1.19 | 07 宣告式 HTTP 用戶端（OpenFeign）.md | Spring Cloud/07 | 無 | `[x]` |
 
 #### 04-Spring-AI/
 
 | # | 新檔名 | 來源 | 微調項目 | 狀態 |
 |---|--------|------|---------|------|
-| 1.20 | 01 Spring AI 概述與快速開始.md | Spring AI/01 | 無 | `[ ]` |
-| 1.21 | 02 ChatClient API 與對話模型.md | Spring AI/02 | 無 | `[ ]` |
-| 1.22 | 03 結構化輸出.md | Spring AI/03 | 無 | `[ ]` |
-| 1.23 | 04 Embedding 與向量資料庫.md | Spring AI/04 | 無 | `[ ]` |
-| 1.24 | 05 RAG 檢索增強生成.md | Spring AI/05 | 修正 filterExpression 注入風險 | `[ ]` |
-| 1.25 | 06 Function Calling 工具呼叫.md | Spring AI/06 | **更新為 @Tool 註解** | `[ ]` |
-| 1.26 | 07 Advisors API 與對話記憶.md | Spring AI/07 | 無 | `[ ]` |
+| 1.20 | 01 Spring AI 概述與快速開始.md | Spring AI/01 | 無 | `[x]` |
+| 1.21 | 02 ChatClient API 與對話模型.md | Spring AI/02 | 無 | `[x]` |
+| 1.22 | 03 結構化輸出.md | Spring AI/03 | 無 | `[x]` |
+| 1.23 | 04 Embedding 與向量資料庫.md | Spring AI/04 | 無 | `[x]` |
+| 1.24 | 05 RAG 檢索增強生成.md | Spring AI/05 | 修正 filterExpression 注入風險 | `[x]` |
+| 1.25 | 06 Function Calling 工具呼叫.md | Spring AI/06 | **更新為 @Tool 註解** | `[x]` |
+| 1.26 | 07 Advisors API 與對話記憶.md | Spring AI/07 | 無 | `[x]` |
 
 #### 06-Frontend/
 
 | # | 新檔名 | 來源 | 微調項目 | 狀態 |
 |---|--------|------|---------|------|
-| 1.27 | 01 React 函式元件與 Hooks.md | React/06 | 無 | `[ ]` |
+| 1.27 | 01 React 函式元件與 Hooks.md | React/06 | 無 | `[x]` |
 
 **Phase 1 小計：28 篇搬入**
 
@@ -315,8 +315,8 @@ flowchart TD
 
 | Phase | 篇數 | 完成數 | 進度 |
 |-------|------|--------|------|
-| Phase 0 | 4 項 | 3 | 75% |
-| Phase 1 | 28 篇 | 0 | 0% |
+| Phase 0 | 4 項 | 4 | 100% |
+| Phase 1 | 28 篇 | 28 | 100% |
 | Phase 2 | 11 篇 | 0 | 0% |
 | Phase 3 | 21 篇 | 0 | 0% |
 | Phase 4 | 5 項 | 0 | 0% |
