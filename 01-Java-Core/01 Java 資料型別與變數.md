@@ -187,3 +187,13 @@ public static double area(Shape shape) {
 > **延伸閱讀**：
 > - [02 字串與集合框架](02%20字串與集合框架.md) — String、StringBuilder、List、Map
 > - [06 常用關鍵字與設計模式](06%20常用關鍵字與設計模式.md) — final 深入、單例模式
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

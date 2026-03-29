@@ -348,3 +348,13 @@ API_KEY=sk-xxxxxxxxxxxx
 ## 小結
 
 Spring Boot 的配置機制既靈活又強大。善用 `@ConfigurationProperties` 實現型別安全的配置繫結，搭配 Profiles 區分多環境配置，再用驗證確保配置正確性，就能構建出可靠的應用程式配置管理。
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

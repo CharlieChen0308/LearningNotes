@@ -327,3 +327,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 - [14 Spring Security 與 JWT](14%20Spring%20Security%20與%20JWT.md)——認證授權的正式方案，涵蓋 Filter Chain、JWT 整合
 - [15 API 文件（SpringDoc OpenAPI）](15%20API%20文件（SpringDoc%20OpenAPI）.md)——取代 Springfox 的 API 文件方案
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

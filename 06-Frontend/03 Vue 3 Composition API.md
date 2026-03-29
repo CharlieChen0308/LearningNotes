@@ -1,6 +1,6 @@
 # 03 Vue 3 Composition API
 
-> **版本**：Vue 3.4+ / TypeScript / Vite
+> **版本**：Vue 3.5.x / TypeScript / Vite
 
 Vue 3 的 Composition API 是一種全新的元件邏輯組織方式，讓開發者能以「功能」為單位組織程式碼，而非被迫分散到 `data`、`methods`、`computed` 等選項中。搭配 TypeScript，能獲得完整的型別推斷與 IDE 支援。
 
@@ -525,3 +525,13 @@ Vue 3 Composition API 的核心概念整理：
 - 上一篇 [02 TypeScript 基礎](./02%20TypeScript%20基礎.md)：型別系統基礎知識
 - 下一篇 [04 Vue 3 元件開發實戰](./04%20Vue%203%20元件開發實戰.md)：路由、Axios 封裝、表單驗證、表格分頁
 - 參考 [01 React 函式元件與 Hooks](./01%20React%20函式元件與%20Hooks.md)：React 生態系的對照
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

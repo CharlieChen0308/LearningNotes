@@ -663,3 +663,13 @@ void shouldThrowWhenPasswordTooShort()
 - **AssertJ**：流式斷言庫，語法更直覺（`assertThat(list).hasSize(3).contains("item")`）
 - **ArchUnit**：架構測試，驗證套件相依規則
 - **JaCoCo**：測試覆蓋率報告，整合到 CI/CD 流程中
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

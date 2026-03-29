@@ -286,3 +286,13 @@ RAG 是將 AI 模型與企業知識庫結合的關鍵技術。Spring AI 的 `Que
 
 - [04 Embedding 與向量資料庫](04%20Embedding%20與向量資料庫.md) — Embedding 原理與向量資料庫操作基礎
 - [07 Advisors API 與對話記憶](07%20Advisors%20API%20與對話記憶.md) — Advisors 攔截器模式與 QuestionAnswerAdvisor 進階用法
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

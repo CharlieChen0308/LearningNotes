@@ -867,3 +867,13 @@ public interface UserRepository extends JpaRepository<AppUser, Long> {
 - [01 Spring Core — DI 與 IoC](01%20Spring%20Core%20—%20DI%20與%20IoC.md)
 - [06 Spring Boot RESTful API 開發](06%20Spring%20Boot%20RESTful%20API%20開發.md)
 - [09 Spring MVC 攔截器與跨域](09%20Spring%20MVC%20攔截器與跨域.md)
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

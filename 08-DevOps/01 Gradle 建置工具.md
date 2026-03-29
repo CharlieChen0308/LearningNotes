@@ -677,3 +677,13 @@ spotless {
 > **延伸閱讀**：
 > - [02 Docker 容器化部署](02%20Docker%20容器化部署.md) — 將 Gradle 建置產出打包為 Docker 映像檔
 > - [06 CI／CD 流程（GitHub Actions）](06%20CI／CD%20流程（GitHub%20Actions）.md) — 在 CI 管線中整合 Gradle 建置與測試
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

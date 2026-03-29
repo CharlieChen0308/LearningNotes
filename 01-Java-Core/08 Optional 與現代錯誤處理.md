@@ -292,3 +292,13 @@ public class GlobalExceptionHandler {
 > - [07 Lambda 與 Stream API](07%20Lambda%20與%20Stream%20API.md) — Optional 與 Stream 的搭配
 > - [08 Spring MVC 例外處理與驗證](../02-Spring-Ecosystem/08%20Spring%20MVC%20例外處理與驗證.md) — MVC 層的例外處理
 > - [13 Spring 事務管理](../02-Spring-Ecosystem/13%20Spring%20事務管理.md) — 異常與事務回滾的關係
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

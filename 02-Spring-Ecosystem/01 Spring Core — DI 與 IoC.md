@@ -311,3 +311,13 @@ public class ServiceA {
 > **延伸閱讀**：
 > - [02 Spring AOP 註解式開發](02%20Spring%20AOP%20註解式開發.md) — AOP 基於 IoC 容器的 Proxy 機制運作，理解 DI 後再學 AOP 會更順暢
 > - [03 Spring Java 配置與註解驅動](03%20Spring%20Java%20配置與註解驅動.md) — 取代 XML 的現代 Bean 定義方式，涵蓋 `@Configuration`、`@ComponentScan`、Profile 切換等實務配置
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

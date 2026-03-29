@@ -358,3 +358,13 @@ Spring MVC 的例外處理（`@RestControllerAdvice` + `@ExceptionHandler`）和
 
 - [06 Spring Boot RESTful API 開發](06%20Spring%20Boot%20RESTful%20API%20開發.md) — RESTful API 建立、回應方式取捨、統一回應格式
 - [07 Spring MVC 註解驅動與 RESTful](07%20Spring%20MVC%20註解驅動與%20RESTful.md) — 註解驅動開發、JSON 序列化控制、@Controller vs @RestController
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

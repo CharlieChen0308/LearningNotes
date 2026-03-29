@@ -381,3 +381,13 @@ SELECT COUNT(*) FROM orders WHERE status = 'PENDING';  -- 有索引就快
 - [01 PostgreSQL 與 MySQL 基礎](./01%20PostgreSQL%20與%20MySQL%20基礎.md) -- 資料型別、DDL/DML、JSON 操作
 - [03 交易與鎖機制](./03%20交易與鎖機制.md) -- ACID、隔離級別、MVCC、死鎖排查
 - [04 Redis 快取實戰](./04%20Redis%20快取實戰.md) -- Redis 整合 Spring Boot、快取策略、分散式鎖
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

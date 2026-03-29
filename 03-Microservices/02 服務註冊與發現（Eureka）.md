@@ -220,3 +220,13 @@ spring:
 - [01 Spring Cloud 概述與微服務架構](01%20Spring%20Cloud%20%E6%A6%82%E8%BF%B0%E8%88%87%E5%BE%AE%E6%9C%8D%E5%8B%99%E6%9E%B6%E6%A7%8B.md) — 微服務架構總覽
 - [06 負載均衡（Spring Cloud LoadBalancer）](06%20%E8%B2%A0%E8%BC%89%E5%9D%87%E8%A1%A1%EF%BC%88Spring%20Cloud%20LoadBalancer%EF%BC%89.md) — 用戶端負載均衡
 - [09 系統設計入門](../09-Software-Engineering/09%20系統設計入門.md) — 水平擴展與服務發現的架構背景
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

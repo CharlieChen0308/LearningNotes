@@ -1,6 +1,6 @@
 # 02 Docker 容器化部署
 
-> **版本**：Docker 24+ / Spring Boot 3.x / Java 17+
+> **版本**：Docker 27.x / Spring Boot 3.x / Java 17+
 
 Docker 是當今最主流的容器化技術，讓開發者能夠將應用程式與其相依環境打包成一個可攜帶的單元，實現「一次建置，到處運行」。本篇將從核心概念出發，逐步介紹 Dockerfile 撰寫、多階段建置、Docker Compose 編排，以及 Spring Boot 容器化的最佳實踐。
 
@@ -437,3 +437,13 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 > **延伸閱讀**：
 > - [03 Kubernetes 入門](03%20Kubernetes%20入門.md) — 容器編排與叢集管理的下一步
 > - [01 Gradle 建置工具](01%20Gradle%20建置工具.md) — 搭配 Gradle 建置 Spring Boot JAR 供 Docker 打包
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

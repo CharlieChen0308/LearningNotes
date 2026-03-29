@@ -1,6 +1,6 @@
 # 06 前端建置工具（Vite）
 
-> **版本**：Vite 5.x / Vue 3 / React 19
+> **版本**：Vite 6.x / Vue 3 / React 19
 
 Vite 是由 Vue.js 作者尤雨溪開發的新一代前端建置工具，利用瀏覽器原生的 ES Module 支援實現極速開發體驗。本篇將從 Vite 的核心優勢出發，介紹專案建立、常用配置、環境變數、代理設定、打包最佳化，以及與 Spring Boot 後端的整合部署。
 
@@ -559,3 +559,13 @@ server {
 > **延伸閱讀**：
 > - [03 Vue 3 Composition API](03%20Vue%203%20Composition%20API.md) — 搭配 Vite 開發 Vue 3 專案的核心語法
 > - [01 React 函式元件與 Hooks](01%20React%20函式元件與%20Hooks.md) — 搭配 Vite 開發 React 專案的基礎知識
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

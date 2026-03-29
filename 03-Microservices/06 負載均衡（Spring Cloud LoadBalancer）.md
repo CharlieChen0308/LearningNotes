@@ -257,3 +257,13 @@ Spring Cloud LoadBalancer 提供了簡單而強大的用戶端負載均衡能力
 
 - [02 服務註冊與發現（Eureka）](02%20%E6%9C%8D%E5%8B%99%E8%A8%BB%E5%86%8A%E8%88%87%E7%99%BC%E7%8F%BE%EF%BC%88Eureka%EF%BC%89.md) — 服務發現機制
 - [07 宣告式 HTTP 用戶端（OpenFeign）](07%20%E5%AE%A3%E5%91%8A%E5%BC%8F%20HTTP%20%E7%94%A8%E6%88%B6%E7%AB%AF%EF%BC%88OpenFeign%EF%BC%89.md) — OpenFeign 內建 LoadBalancer 支援
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

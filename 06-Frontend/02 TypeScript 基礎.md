@@ -1,6 +1,6 @@
 # 02 TypeScript 基礎
 
-> **版本**：TypeScript 5.x
+> **版本**：TypeScript 5.7.x
 
 TypeScript 是 JavaScript 的超集（superset），由 Microsoft 開發維護。它在 JavaScript 之上加入了靜態型別系統，讓開發者能在編譯期就捕捉到型別錯誤，而非等到執行期才爆炸。對於後端出身的 Java 開發者來說，TypeScript 的型別概念會感到非常親切。
 
@@ -462,3 +462,13 @@ TypeScript 在不改變 JavaScript 執行環境的前提下，提供了強大的
 
 - 下一篇 [03 Vue 3 Composition API](./03%20Vue%203%20Composition%20API.md)：在 Vue 3 中運用 TypeScript
 - 參考 [01 React 函式元件與 Hooks](./01%20React%20函式元件與%20Hooks.md)：React 生態系的現代開發方式
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

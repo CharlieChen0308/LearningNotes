@@ -217,3 +217,13 @@ public class BatchService {
 > - [01 Spring Core — DI 與 IoC](01%20Spring%20Core%20—%20DI%20與%20IoC.md) — 理解 Spring 容器與代理機制
 > - [02 Spring AOP 註解式開發](02%20Spring%20AOP%20註解式開發.md) — 事務管理的底層就是 AOP
 > - [10 Spring Data JPA](10%20Spring%20Data%20JPA.md) — JPA 中的事務整合
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

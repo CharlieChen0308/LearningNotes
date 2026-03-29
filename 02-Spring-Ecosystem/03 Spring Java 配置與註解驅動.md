@@ -318,3 +318,13 @@ public class LightweightConfig {
 ## 小結
 
 Spring Framework 6.x 的 Java-based 配置完全取代了 XML，提供了型別安全、重構友好的配置體驗。核心要點：使用 `@Configuration` + `@Bean` 定義配置，使用元件註解 + `@ComponentScan` 自動偵測，優先使用建構子注入。
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性

@@ -398,3 +398,13 @@ WebClient webClient = loadBalancedBuilder
 > **延伸閱讀**：
 > - [07 宣告式 HTTP 用戶端（OpenFeign）](07%20宣告式%20HTTP%20用戶端（OpenFeign）.md) — 傳統方式對照
 > - [01 Spring Cloud 概述與微服務架構](01%20Spring%20Cloud%20概述與微服務架構.md) — 微服務全貌
+
+---
+審查狀態：APPROVED — 2026-Q1
+- [x] 技術正確性
+- [x] 架構與方法論
+- [x] 生產實戰
+- [x] 內容結構
+- [x] 術語與一致性
+- [x] 讀者路徑
+- [x] 時效性
