@@ -40,6 +40,34 @@ K8s 叢集由兩種角色組成：
 
 Docker Compose 適合本地開發和小型專案；當需要高可用、自動擴縮、滾動更新時，就該考慮 K8s。
 
+### HPA 自動水平擴縮範例
+
+上表提到的 HPA（HorizontalPodAutoscaler）可根據 CPU、記憶體等指標自動調整 Pod 副本數：
+
+```yaml
+# hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+```
+
+HPA 需要叢集中安裝 **Metrics Server** 才能取得資源指標。部署後可用 `kubectl get hpa` 確認目前狀態與副本數。
+
 ---
 
 ## 2、核心資源
@@ -229,6 +257,42 @@ spec:
 
 Ingress 本身只是規則定義，需要搭配 **Ingress Controller**（如 nginx-ingress-controller）才能生效。Ingress Controller 是實際處理流量的元件，負責讀取 Ingress 規則並設定反向代理。
 
+### 2.6 PersistentVolumeClaim（PVC）
+
+Pod 重啟後容器內的資料會遺失。對於資料庫等需要持久化儲存的服務，需透過 PVC 向叢集申請持久儲存空間：
+
+```yaml
+# postgres-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 10Gi
+```
+
+在 Deployment 中掛載 PVC：
+
+```yaml
+# postgres-deployment.yaml（節錄 spec.template.spec 部分）
+spec:
+  containers:
+    - name: postgres
+      image: postgres:15
+      volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+  volumes:
+    - name: postgres-storage
+      persistentVolumeClaim:
+        claimName: postgres-pvc
+```
+
+**注意**：`ReadWriteOnce` 表示只能被單一 Node 掛載讀寫，適合資料庫。若需多 Node 共享，可使用 `ReadWriteMany`（需要支援的 StorageClass，如 NFS）。
+
 ---
 
 ## 3、Spring Boot 部署到 K8s
@@ -414,7 +478,39 @@ spring:
 
 ---
 
-## 6、小結
+## 6、生產環境注意事項
+
+### Namespace 隔離策略
+
+Namespace 不僅是邏輯分組，更是資源配額和存取控制的邊界。建議至少區分以下 Namespace：
+
+| Namespace | 用途 |
+|-----------|------|
+| `production` | 正式環境 |
+| `staging` | 預備環境（與正式環境設定一致） |
+| `development` | 開發環境 |
+
+搭配 `ResourceQuota` 可限制每個 Namespace 的 CPU、記憶體總量，防止單一環境耗盡叢集資源：
+
+```bash
+kubectl create namespace staging
+kubectl apply -f resource-quota.yaml -n staging
+```
+
+### RBAC 基礎
+
+K8s 透過 RBAC（Role-Based Access Control）控制「誰」可以對「哪些資源」做「什麼操作」。核心概念：
+
+- **Role**：定義在某個 Namespace 中可執行的操作（如：可以讀取 Pod、可以建立 Deployment）
+- **ClusterRole**：與 Role 相同，但作用範圍是整個叢集
+- **RoleBinding**：將 Role 綁定給使用者或 ServiceAccount
+- **ClusterRoleBinding**：將 ClusterRole 綁定給使用者或 ServiceAccount
+
+**最小權限原則**：每個服務帳號只授予完成任務所需的最低權限。例如，CI/CD pipeline 的 ServiceAccount 只需要 `deployments` 的 `create`/`update` 權限，不應該擁有 `delete` 或 `*` 全域權限。
+
+---
+
+## 7、小結
 
 本篇涵蓋了 Kubernetes 入門所需的核心知識：
 
@@ -427,3 +523,4 @@ spring:
 延伸閱讀：
 
 - **Docker 容器化部署**：`08-DevOps/02 Docker 容器化部署.md`
+- **CI/CD 流程**：`08-DevOps/06 CI／CD 流程（GitHub Actions）.md`
