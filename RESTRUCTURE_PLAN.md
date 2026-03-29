@@ -178,63 +178,63 @@ LearningNotes/
 
 | # | 新檔名 | 內容規劃 | 狀態 |
 |---|--------|---------|------|
-| 3.1 | 07 Lambda 與 Stream API.md | Function/Consumer/Predicate/Supplier + Stream 操作鏈 + Collectors + 平行流 | `[ ]` |
-| 3.2 | 08 Optional 與現代錯誤處理.md | Optional 用法 + Exception 體系 + try-with-resources | `[ ]` |
+| 3.1 | 07 Lambda 與 Stream API.md | Function/Consumer/Predicate/Supplier + Stream 操作鏈 + Collectors + 平行流 | `[x]` |
+| 3.2 | 08 Optional 與現代錯誤處理.md | Optional 用法 + Exception 體系 + try-with-resources | `[x]` |
 
 #### 02-Spring-Ecosystem/
 
 | # | 新檔名 | 內容規劃 | 狀態 |
 |---|--------|---------|------|
-| 3.3 | 14 Spring Security 與 JWT.md | SecurityFilterChain + JWT 認證/刷新 + 角色權限 + CORS 安全 | `[ ]` |
-| 3.4 | 15 API 文件（SpringDoc OpenAPI）.md | springdoc-openapi + Swagger UI + @Operation/@Schema 註解 | `[ ]` |
-| 3.5 | 16 MyBatis-Plus 快速開發.md | BaseMapper / ServiceImpl / LambdaQueryWrapper / 程式碼產生器 / 分頁外掛 / 多租戶 | `[ ]` |
+| 3.3 | 14 Spring Security 與 JWT.md | SecurityFilterChain + JWT 認證/刷新 + 角色權限 + CORS 安全 | `[x]` |
+| 3.4 | 15 API 文件（SpringDoc OpenAPI）.md | springdoc-openapi + Swagger UI + @Operation/@Schema 註解 | `[x]` |
+| 3.5 | 16 MyBatis-Plus 快速開發.md | BaseMapper / ServiceImpl / LambdaQueryWrapper / 程式碼產生器 / 分頁外掛 / 多租戶 | `[x]` |
 
 #### 03-Microservices/
 
 | # | 新檔名 | 內容規劃 | 狀態 |
 |---|--------|---------|------|
-| 3.6 | 08 Spring 6 HTTP Interface.md | 宣告式 HTTP 用戶端（取代 OpenFeign）/ @HttpExchange / RestClient | `[ ]` |
+| 3.6 | 08 Spring 6 HTTP Interface.md | 宣告式 HTTP 用戶端（取代 OpenFeign）/ @HttpExchange / RestClient | `[x]` |
 
 #### 05-Database/
 
 | # | 新檔名 | 內容規劃 | 狀態 |
 |---|--------|---------|------|
-| 3.7 | 01 PostgreSQL 與 MySQL 基礎.md | 資料型別比較 + DDL/DML + JSON 支援 + 時區處理 | `[ ]` |
-| 3.8 | 02 索引原理與 SQL 優化.md | B+ 樹 / 覆蓋索引 / 索引失效 / EXPLAIN 分析 | `[ ]` |
-| 3.9 | 03 交易與鎖機制.md | ACID / 隔離級別 / InnoDB 行鎖 / MVCC / 死鎖排查 | `[ ]` |
-| 3.10 | 04 Redis 快取實戰.md | 資料型別 / Spring Cache 整合 / 快取穿透/擊穿/雪崩 / 分散式鎖 | `[ ]` |
+| 3.7 | 01 PostgreSQL 與 MySQL 基礎.md | 資料型別比較 + DDL/DML + JSON 支援 + 時區處理 | `[x]` |
+| 3.8 | 02 索引原理與 SQL 優化.md | B+ 樹 / 覆蓋索引 / 索引失效 / EXPLAIN 分析 | `[x]` |
+| 3.9 | 03 交易與鎖機制.md | ACID / 隔離級別 / InnoDB 行鎖 / MVCC / 死鎖排查 | `[x]` |
+| 3.10 | 04 Redis 快取實戰.md | 資料型別 / Spring Cache 整合 / 快取穿透/擊穿/雪崩 / 分散式鎖 | `[x]` |
 
 #### 06-Frontend/
 
 | # | 新檔名 | 內容規劃 | 狀態 |
 |---|--------|---------|------|
-| 3.11 | 02 TypeScript 基礎.md | 型別系統 / 介面 / 泛型 / 實用工具型別（Partial/Pick/Omit） | `[ ]` |
-| 3.12 | 03 Vue 3 Composition API.md | ref/reactive / computed/watch / defineProps/defineEmits / Pinia 狀態管理 | `[ ]` |
-| 3.13 | 04 Vue 3 元件開發實戰.md | SFC 結構 / Element Plus 整合 / 路由（Vue Router 4）/ Axios 封裝 | `[ ]` |
-| 3.14 | 05 React 進階與狀態管理.md | useContext / useReducer / 自定義 Hook / React Router v6 / Zustand | `[ ]` |
-| 3.15 | 06 前端建置工具（Vite）.md | Vite 配置 / 環境變數 / 代理設定 / 打包最佳化 / 與 Spring Boot 整合部署 | `[ ]` |
+| 3.11 | 02 TypeScript 基礎.md | 型別系統 / 介面 / 泛型 / 實用工具型別（Partial/Pick/Omit） | `[x]` |
+| 3.12 | 03 Vue 3 Composition API.md | ref/reactive / computed/watch / defineProps/defineEmits / Pinia 狀態管理 | `[x]` |
+| 3.13 | 04 Vue 3 元件開發實戰.md | SFC 結構 / Element Plus 整合 / 路由（Vue Router 4）/ Axios 封裝 | `[x]` |
+| 3.14 | 05 React 進階與狀態管理.md | useContext / useReducer / 自定義 Hook / React Router v6 / Zustand | `[x]` |
+| 3.15 | 06 前端建置工具（Vite）.md | Vite 配置 / 環境變數 / 代理設定 / 打包最佳化 / 與 Spring Boot 整合部署 | `[x]` |
 
 #### 08-DevOps/
 
 | # | 新檔名 | 內容規劃 | 狀態 |
 |---|--------|---------|------|
-| 3.16 | 01 Gradle 建置工具.md | build.gradle.kts / 依賴管理 / 多模組專案 / 與 Maven 比較 / Spring Boot Plugin | `[ ]` |
-| 3.17 | 02 Docker 容器化部署.md | Dockerfile 撰寫 / 多階段建置 / Docker Compose / Spring Boot 容器化最佳實踐 | `[ ]` |
-| 3.18 | 03 Kubernetes 入門.md | Pod/Service/Deployment / ConfigMap/Secret / Ingress / Spring Cloud Kubernetes | `[ ]` |
-| 3.19 | 04 JUnit 5 測試實戰.md | @Test/Nested/ParameterizedTest / MockMvc / @SpringBootTest / @DataJpaTest / Testcontainers | `[ ]` |
-| 3.20 | 05 Playwright 前端自動化測試.md | 安裝設定 / 選擇器策略 / Page Object Model / CI 整合 / 截圖與錄影 | `[ ]` |
-| 3.21 | 06 CI/CD 流程（GitHub Actions）.md | 工作流程語法 / Build+Test+Deploy 管線 / Docker 映像推送 / 環境變數與 Secrets | `[ ]` |
+| 3.16 | 01 Gradle 建置工具.md | build.gradle.kts / 依賴管理 / 多模組專案 / 與 Maven 比較 / Spring Boot Plugin | `[x]` |
+| 3.17 | 02 Docker 容器化部署.md | Dockerfile 撰寫 / 多階段建置 / Docker Compose / Spring Boot 容器化最佳實踐 | `[x]` |
+| 3.18 | 03 Kubernetes 入門.md | Pod/Service/Deployment / ConfigMap/Secret / Ingress / Spring Cloud Kubernetes | `[x]` |
+| 3.19 | 04 JUnit 5 測試實戰.md | @Test/Nested/ParameterizedTest / MockMvc / @SpringBootTest / @DataJpaTest / Testcontainers | `[x]` |
+| 3.20 | 05 Playwright 前端自動化測試.md | 安裝設定 / 選擇器策略 / Page Object Model / CI 整合 / 截圖與錄影 | `[x]` |
+| 3.21 | 06 CI/CD 流程（GitHub Actions）.md | 工作流程語法 / Build+Test+Deploy 管線 / Docker 映像推送 / 環境變數與 Secrets | `[x]` |
 
 **Phase 3 小計：21 篇新寫**
 
 **Phase 3 驗收 Checklist（每篇）：**
 
-- `[ ]` 版本標注
-- `[ ]` 完整可執行的程式碼範例
-- `[ ]` 與官方文件核對（使用 context7 MCP 查詢最新文件）
-- `[ ]` 有「延伸閱讀」連結到相關篇章
-- `[ ]` 適當的圖解（mermaid 語法）
-- `[ ]` Git commit：每完成一個子目錄提交一次
+- `[x]` 版本標注
+- `[x]` 完整可執行的程式碼範例
+- `[x]` 與官方文件核對（使用 context7 MCP 查詢最新文件）
+- `[x]` 有「延伸閱讀」連結到相關篇章
+- `[x]` 適當的圖解（mermaid 語法）
+- `[x]` Git commit：每完成一個子目錄提交一次
 
 ---
 
@@ -318,7 +318,7 @@ flowchart TD
 | Phase 0 | 4 項 | 4 | 100% |
 | Phase 1 | 28 篇 | 28 | 100% |
 | Phase 2 | 11 篇 | 11 | 100% |
-| Phase 3 | 21 篇 | 0 | 0% |
+| Phase 3 | 21 篇 | 21 | 100% |
 | Phase 4 | 5 項 | 0 | 0% |
 | **合計** | **60 篇 + 9 項** | **0** | **0%** |
 
