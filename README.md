@@ -168,4 +168,4 @@
 
 ## 專案管理
 
-- 編輯審查角色：[EDITORIAL_ROLES.md](EDITORIAL_ROLES.md)
+- 編輯審查體系：[00-Editorial](00-Editorial/README.md) — 審查角色、流程、術語規範
