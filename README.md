@@ -1,7 +1,7 @@
 # LearningNotes
 
 > Java 全端工程師學習筆記 — 以 Java 17/21 + Spring Boot 3.x 為基準，涵蓋後端、前端、資料庫、微服務、AI、DevOps。
-> 共 60 篇文章，8 大主題。
+> 共 61 篇文章，8 大主題。
 
 ---
 
@@ -118,7 +118,7 @@
 ---
 
 ### 08 DevOps
-> Gradle / Docker / K8s / JUnit 5 / Playwright / CI/CD
+> Gradle / Docker / K8s / JUnit 5 / Playwright / CI/CD / Git
 
 | # | 文章 |
 |---|------|
@@ -128,6 +128,7 @@
 | 04 | [JUnit 5 測試實戰](08-DevOps/04%20JUnit%205%20測試實戰.md) |
 | 05 | [Playwright 前端自動化測試](08-DevOps/05%20Playwright%20前端自動化測試.md) |
 | 06 | [CI/CD 流程（GitHub Actions）](08-DevOps/06%20CI／CD%20流程（GitHub%20Actions）.md) |
+| 07 | [Git 與 GitHub 版本控制](08-DevOps/07%20Git%20與%20GitHub%20版本控制.md) |
 
 ---
 

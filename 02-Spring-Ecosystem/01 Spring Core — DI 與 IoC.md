@@ -138,7 +138,7 @@ ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.
 OrderService service = ctx.getBean(OrderService.class);
 ```
 
-> 更多 XML 配置範例請參考 [01 Spring的簡單配置和使用](../_archive/Spring/01%20Spring的簡單配置和使用.md)。
+> 更多 XML 配置範例請參考 [03 Spring Java 配置與註解驅動](03%20Spring%20Java%20配置與註解驅動.md)（現代配置方式已取代 XML）。
 
 ### 3.2 Java 配置方式（現代）
 
@@ -244,5 +244,5 @@ public class NotificationService {
 | 建構子注入 | 官方推薦的 DI 方式，依賴不可變、容易測試 |
 
 > **延伸閱讀**：
-> - [05 Spring的@Autowired註解、@Resource註解、@Service註解](../_archive/Spring/05%20Spring的@Autowired註解、@Resource註解、@Service註解.md) — DI 常用註解的詳細用法
 > - [03 Spring Java 配置與註解驅動](03%20Spring%20Java%20配置與註解驅動.md) — 取代 XML 的現代配置方式
+> - [02 Spring AOP 註解式開發](02%20Spring%20AOP%20註解式開發.md) — AOP 與 IoC 的搭配

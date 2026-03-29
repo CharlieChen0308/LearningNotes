@@ -197,6 +197,6 @@ springdoc:
 | 生產環境 | 務必停用 |
 
 > **延伸閱讀**：
-> - [06 Spring Boot RESTful API 開發](06%20Spring%20Boot%20RESTful%20API%20���發.md) — REST API 基礎
+> - [06 Spring Boot RESTful API 開發](06%20Spring%20Boot%20RESTful%20API%20開發.md) — REST API 基礎
 > - [14 Spring Security 與 JWT](14%20Spring%20Security%20與%20JWT.md) — 認證整合
 > - [08 Spring MVC 例外處理與驗證](08%20Spring%20MVC%20例外處理與驗證.md) — 驗證註解
