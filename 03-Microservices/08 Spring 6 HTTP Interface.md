@@ -185,14 +185,213 @@ public ReactiveUserClient reactiveUserClient() {
 
 參數註解：`@PathVariable`、`@RequestParam`、`@RequestHeader`、`@RequestBody`、`@CookieValue`
 
-## 6、小結
+## 6、已知限制
+
+HTTP Interface 作為較新的技術，目前仍有以下限制需注意：
+
+| 限制 | 說明 |
+|------|------|
+| **無內建服務發現** | 不像 OpenFeign 的 `@FeignClient(name = "user-service")` 可自動整合服務註冊中心，需手動配置服務 URL |
+| **無內建斷路器 / 重試** | 不提供 fallback 機制，需自行整合 Resilience4j 等第三方函式庫 |
+| **無內建負載均衡** | 需搭配 `@LoadBalanced` WebClient 或 Spring Cloud LoadBalancer 使用 |
+| **社群資源較少** | 技術較新（Spring 6 / Spring Boot 3 才引入），網路上的範例與討論相對 OpenFeign 少很多 |
+| **攔截器功能較簡單** | Spring 原生的 `ClientHttpRequestInterceptor` 功能不如 Feign 的 `RequestInterceptor` 豐富 |
+
+## 7、生產環境注意事項
+
+### 7.1 連線池配置（WebClient + Reactor Netty）
+
+WebClient 底層使用 Reactor Netty，預設的連線池可能不符合生產環境需求：
+
+```java
+@Bean
+public ReactiveUserClient reactiveUserClient() {
+    // 自訂 Reactor Netty 連線池
+    ConnectionProvider provider = ConnectionProvider.builder("custom")
+        .maxConnections(200)                         // 最大連線數
+        .maxIdleTime(Duration.ofSeconds(30))         // 閒置連線存活時間
+        .maxLifeTime(Duration.ofMinutes(5))          // 連線最大存活時間
+        .pendingAcquireTimeout(Duration.ofSeconds(10)) // 等待取得連線的逾時
+        .build();
+
+    HttpClient httpClient = HttpClient.create(provider);
+
+    WebClient webClient = WebClient.builder()
+        .baseUrl("http://user-service:8081")
+        .clientConnector(new ReactorClientHttpConnector(httpClient))
+        .build();
+
+    return HttpServiceProxyFactory
+        .builderFor(WebClientAdapter.create(webClient))
+        .build()
+        .createClient(ReactiveUserClient.class);
+}
+```
+
+### 7.2 逾時設定（RestClient）
+
+生產環境建議明確設定連線逾時與讀取逾時，避免無限等待：
+
+```java
+@Bean
+public UserClient userClient() {
+    SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+    requestFactory.setConnectTimeout(Duration.ofSeconds(3));  // 連線逾時
+    requestFactory.setReadTimeout(Duration.ofSeconds(10));     // 讀取逾時
+
+    RestClient restClient = RestClient.builder()
+        .baseUrl("http://user-service:8081")
+        .requestFactory(requestFactory)
+        .build();
+
+    return HttpServiceProxyFactory
+        .builderFor(RestClientAdapter.create(restClient))
+        .build()
+        .createClient(UserClient.class);
+}
+```
+
+### 7.3 搭配 Resilience4j 重試策略
+
+```java
+@Configuration
+public class ResilienceConfig {
+
+    @Bean
+    public RetryRegistry retryRegistry() {
+        RetryConfig config = RetryConfig.custom()
+            .maxAttempts(3)
+            .waitDuration(Duration.ofMillis(500))
+            .retryExceptions(IOException.class, WebClientRequestException.class)
+            .ignoreExceptions(UserNotFoundException.class) // 業務例外不重試
+            .build();
+        return RetryRegistry.of(config);
+    }
+}
+
+@Service
+public class ResilientOrderService {
+    private final UserClient userClient;
+    private final Retry retry;
+
+    public ResilientOrderService(UserClient userClient, RetryRegistry retryRegistry) {
+        this.userClient = userClient;
+        this.retry = retryRegistry.retry("userClient");
+    }
+
+    public UserResponse getUser(Long id) {
+        return Retry.decorateSupplier(retry, () -> userClient.getUser(id)).get();
+    }
+}
+```
+
+### 7.4 錯誤處理最佳實踐
+
+```java
+@Bean
+public UserClient userClient() {
+    RestClient restClient = RestClient.builder()
+        .baseUrl("http://user-service:8081")
+        .defaultStatusHandler(HttpStatusCode::is4xxClientError, (req, res) -> {
+            // 統一處理 4xx 錯誤
+            throw new RemoteServiceException("用戶端錯誤: " + res.getStatusCode());
+        })
+        .defaultStatusHandler(HttpStatusCode::is5xxServerError, (req, res) -> {
+            // 統一處理 5xx 錯誤
+            throw new RemoteServiceException("遠端服務錯誤: " + res.getStatusCode());
+        })
+        .build();
+
+    return HttpServiceProxyFactory
+        .builderFor(RestClientAdapter.create(restClient))
+        .build()
+        .createClient(UserClient.class);
+}
+```
+
+## 8、Spring Cloud 整合指引
+
+### 8.1 搭配 Spring Cloud LoadBalancer
+
+透過 `@LoadBalanced` 讓 WebClient 具備用戶端負載均衡能力：
+
+```java
+@Configuration
+public class LoadBalancedClientConfig {
+
+    @Bean
+    @LoadBalanced
+    public WebClient.Builder loadBalancedWebClientBuilder() {
+        return WebClient.builder();
+    }
+
+    @Bean
+    public UserClient userClient(@LoadBalanced WebClient.Builder builder) {
+        // 使用服務名稱取代實際 IP:Port
+        WebClient webClient = builder
+            .baseUrl("http://user-service")
+            .build();
+
+        return HttpServiceProxyFactory
+            .builderFor(WebClientAdapter.create(webClient))
+            .build()
+            .createClient(UserClient.class);
+    }
+}
+```
+
+### 8.2 搭配服務發現（Eureka / Nacos）
+
+只要應用已註冊至服務發現中心，`@LoadBalanced` WebClient 會自動將服務名稱解析為實際位址：
+
+```yaml
+# application.yml
+spring:
+  cloud:
+    discovery:
+      enabled: true
+
+# Eureka 範例
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+```
+
+```java
+// 直接使用服務名稱即可，無需硬編碼 IP
+WebClient webClient = loadBalancedBuilder
+    .baseUrl("http://user-service")  // user-service 為註冊中心的服務名稱
+    .build();
+```
+
+> **注意**：使用 `RestClient` 搭配 Spring Cloud LoadBalancer 時，需要額外配置 `RestTemplate` 的 `@LoadBalanced` 支援，目前 WebClient 的整合較為成熟。
+
+## 9、何時不該使用 HTTP Interface
+
+雖然 HTTP Interface 是 Spring 官方推薦的方向，但以下情境可能不適合：
+
+| 情境 | 原因 | 建議方案 |
+|------|------|---------|
+| **需要豐富的 Feign 攔截器生態** | Feign 有大量成熟的 `RequestInterceptor`（如 OAuth2、日誌、指標），HTTP Interface 的攔截器較為基礎 | 繼續使用 OpenFeign |
+| **需要開箱即用的 Spring Cloud 整合** | OpenFeign 的 `@FeignClient(name = "...")` 直接整合服務發現與負載均衡，HTTP Interface 需手動配置 | 繼續使用 OpenFeign |
+| **既有大型微服務專案** | 大量 Feign Client 遷移成本高，且 OpenFeign 仍在維護中 | 維持 OpenFeign，新模組可用 HTTP Interface |
+| **團隊不熟悉 WebClient** | 響應式場景下需要 WebClient 知識，學習曲線較高 | 先用 RestClient（同步），待團隊熟悉後再引入 WebClient |
+| **需要內建的 fallback 機制** | OpenFeign + Sentinel/Hystrix 提供宣告式 fallback，HTTP Interface 需自行實作 | 使用 OpenFeign 或手動整合 Resilience4j |
+
+> **遷移建議**：既有專案不必急於遷移。可採取漸進策略 — 新模組使用 HTTP Interface，既有模組維持 OpenFeign，兩者可共存於同一專案中。
+
+## 10、小結
 
 | 概念 | 重點 |
 |------|------|
 | HTTP Interface | Spring 6 原生宣告式 HTTP 用戶端 |
 | RestClient | Spring 6.1+ 取代 RestTemplate 的 fluent API |
 | 底層 | 同步用 RestClient，響應式用 WebClient |
-| 與 OpenFeign | 新專案推薦 HTTP Interface，舊專案可繼續用 OpenFeign |
+| 已知限制 | 無內建服務發現、斷路器、負載均衡，需手動整合 |
+| 生產環境 | 必須配置連線池、逾時、重試策略與統一錯誤處理 |
+| Spring Cloud 整合 | 透過 `@LoadBalanced` WebClient 搭配服務發現使用 |
+| 與 OpenFeign | 新專案推薦 HTTP Interface，舊專案可繼續用 OpenFeign，兩者可共存 |
 
 > **延伸閱讀**：
 > - [07 宣告式 HTTP 用戶端（OpenFeign）](07%20宣告式%20HTTP%20用戶端（OpenFeign）.md) — 傳統方式對照

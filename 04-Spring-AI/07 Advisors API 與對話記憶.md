@@ -1,6 +1,6 @@
 # 07 Advisors API 與對話記憶
 
-> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+> **版本**：Spring AI 1.0+ / Spring Boot 3.4.x / Java 17+
 
 ## 什麼是 Advisors
 
@@ -178,8 +178,10 @@ public class ContentFilterAdvisor implements CallAroundAdvisor {
         for (String keyword : BLOCKED_KEYWORDS) {
             if (userText.contains(keyword)) {
                 // 返回安全提示，不送出給 AI
-                ChatResponse safeResponse = createSafeResponse(
-                    "抱歉，為了安全考量，我無法處理包含敏感資訊的請求。");
+                ChatResponse safeResponse = ChatResponse.builder()
+                    .generations(List.of(new Generation(
+                        new AssistantMessage("抱歉，為了安全考量，我無法處理包含敏感資訊的請求。"))))
+                    .build();
                 return new AdvisedResponse(safeResponse,
                     advisedRequest.adviseContext());
             }
@@ -199,6 +201,10 @@ public class ContentFilterAdvisor implements CallAroundAdvisor {
     }
 }
 ```
+
+> **API 版本注意**：上述範例中 `new AdvisedResponse(chatResponse, adviseContext)` 的建構方式與
+> `ChatResponse.builder()` 的用法，請依實際使用的 Spring AI 版本確認。Spring AI 1.0.x 的 API
+> 仍在快速演進中，部分類別的簽章可能在小版本間有所調整，建議參照官方文件或 IDE 自動補全確認。
 
 ## 組合多個 Advisors
 
@@ -228,10 +234,67 @@ Advisors 按照 `getOrder()` 的順序執行，數字越小越先執行。
 避免對話歷史過長導致 Token 超限：
 
 ```java
-MessageChatMemoryAdvisor.builder(chatMemory)
-    .chatMemoryRetrieveSize(20)  // 最多取回最近 20 條訊息
-    .build()
+// 方式一：透過 MessageWindowChatMemory 控制視窗大小（推薦）
+ChatMemory chatMemory = MessageWindowChatMemory.builder()
+    .chatMemoryRepository(chatMemoryRepository)
+    .maxMessages(20)  // 最多保留最近 20 條訊息
+    .build();
 ```
+
+> **API 版本注意**：早期版本使用 `chatMemoryRetrieveSize(N)` 方法控制取回筆數，
+> Spring AI 1.0 GA 後改為透過 `MessageWindowChatMemory.builder().maxMessages(N)` 設定。
+> 請依實際使用版本確認可用的 API。
+
+## ChatMemory 選型指引
+
+### 儲存實現選擇
+
+| 實現 | 適用場景 | 優點 | 限制 |
+|------|---------|------|------|
+| `InMemoryChatMemoryRepository` | 開發、測試、原型驗證 | 零配置、啟動快 | 重啟即消失，不適合生產 |
+| `JdbcChatMemoryRepository` | 生產環境（已有 RDBMS） | 持久化、事務支援、易維運 | 高併發下需注意連線池 |
+| `CassandraChatMemoryRepository` | 大規模分散式系統 | 水平擴展、高可用 | 運維複雜度較高 |
+| `Neo4jChatMemoryRepository` | 需要對話關係分析 | 圖查詢能力 | 使用場景較特殊 |
+
+### Memory Advisor 選擇
+
+| Advisor | 運作方式 | 適用場景 |
+|---------|---------|---------|
+| `MessageChatMemoryAdvisor` | 將歷史訊息以完整 Message 列表注入 | 大多數聊天場景，模型能理解對話脈絡 |
+| `PromptChatMemoryAdvisor` | 將歷史摘要寫入 System Prompt | 不支援多訊息格式的模型 |
+| `VectorStoreChatMemoryAdvisor` | 以語意搜尋取回相關歷史片段 | 超長對話、需跨 Session 召回相關記憶 |
+
+**選擇建議**：一般應用優先使用 `MessageChatMemoryAdvisor`；當對話歷史極長或需要跨對話檢索時，改用 `VectorStoreChatMemoryAdvisor`。
+
+## 生產環境注意事項
+
+### Token 限制管理
+
+對話歷史會持續累積，若未加控制，可能超出模型的 Context Window 上限：
+
+- 使用 `MessageWindowChatMemory` 的 `maxMessages` 限制保留的訊息數量
+- 監控每次請求的 Token 使用量，設定告警閾值
+- 考慮在超出限制前進行摘要壓縮（目前需自行實作）
+
+### 記憶體清理與過期策略
+
+- **定期清理**：對閒置超過一定時間的 Session 進行清理，避免儲存無限增長
+- **TTL 機制**：若使用 Cassandra 或 Redis 儲存，可利用原生 TTL 功能自動過期
+- **JDBC 場景**：建議搭配排程任務（如 `@Scheduled`）定期刪除過期對話紀錄
+
+### 成本控制
+
+長對話會顯著增加 Token 消耗，每輪對話都會重送歷史訊息：
+
+- 設定合理的 `maxMessages`（建議 10–30 條）
+- 計算公式參考：每輪成本 ≈ 歷史訊息 Token + 新訊息 Token + 回應 Token
+- 對於高流量場景，評估是否需要對話摘要機制以降低成本
+
+### Session 管理
+
+- 每個 `conversationId` 對應一組獨立的對話歷史
+- 前端應在使用者登入時產生唯一的 `conversationId`，登出或逾時後清除
+- 多裝置場景需考慮 Session 同步策略
 
 ## 小結
 

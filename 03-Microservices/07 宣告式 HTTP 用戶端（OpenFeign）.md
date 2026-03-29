@@ -8,6 +8,8 @@
 
 OpenFeign 是一個**宣告式的 HTTP 用戶端**，只需要建立一個介面並加上註解，就能實現服務間的呼叫，像呼叫本地方法一樣簡單。
 
+> **💡 新專案推薦**：Spring 6+ 提供了原生的 HTTP Interface 作為官方推薦的宣告式用戶端方案。新專案建議優先評估 HTTP Interface（見 [08 Spring 6 HTTP Interface](08%20Spring%206%20HTTP%20Interface.md)），OpenFeign 仍適用於需要其豐富功能生態的場景。
+
 ## 新增依賴
 
 ```xml
@@ -127,6 +129,10 @@ logging:
 
 在所有 Feign 請求中自動帶上認證 Token：
 
+> 此為教學簡化範例，生產環境需額外考慮：
+> - Token 刷新機制（過期自動重新取得）
+> - 多執行緒環境下 RequestContextHolder 的傳遞問題（如使用 Hystrix/異步呼叫）
+
 ```java
 @Configuration
 public class FeignInterceptorConfig {
@@ -161,6 +167,10 @@ spring:
 ```
 
 ### 定義降級類
+
+> 此為教學簡化範例，生產環境需額外考慮：
+> - 降級回應應記錄日誌以利排查
+> - 建議使用 FallbackFactory 以獲取異常資訊（見下方範例）
 
 ```java
 @FeignClient(name = "service-user", fallback = UserClientFallback.class)
@@ -215,6 +225,50 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
 }
 ```
 
+## 連接池配置（生產環境建議）
+
+OpenFeign 預設使用 `java.net.URLConnection`，**不支援連接池**，不適合生產環境使用。建議替換為 OkHttp 或 Apache HttpClient。
+
+### 使用 OkHttp
+
+```xml
+<dependency>
+    <groupId>io.github.openfeign</groupId>
+    <artifactId>feign-okhttp</artifactId>
+</dependency>
+```
+
+```yaml
+spring:
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
+```
+
+> 此為教學簡化範例，生產環境需額外考慮：
+> - 連接池大小（maxIdleConnections）與存活時間（keepAliveDuration）應根據流量調整
+> - 搭配逾時設定避免連線洩漏
+> - 監控連接池使用率
+
+### 使用 Apache HttpClient 5
+
+```xml
+<dependency>
+    <groupId>io.github.openfeign</groupId>
+    <artifactId>feign-hc5</artifactId>
+</dependency>
+```
+
+```yaml
+spring:
+  cloud:
+    openfeign:
+      httpclient:
+        hc5:
+          enabled: true
+```
+
 ## Feign 的請求壓縮
 
 ```yaml
@@ -232,13 +286,16 @@ spring:
 
 ## RestTemplate vs OpenFeign 比較
 
-| 特性 | RestTemplate | OpenFeign |
-|------|-------------|-----------|
-| 呼叫方式 | 程式碼編寫 | 宣告式介面 |
-| 可讀性 | 一般 | 優秀，類似本地呼叫 |
-| 內建負載均衡 | 需手動加 @LoadBalanced | 自動整合 |
-| 熔斷整合 | 手動整合 | 原生支援 |
-| 請求攔截 | 需自訂 | 提供 RequestInterceptor |
+| 特性 | RestTemplate | OpenFeign | HTTP Interface |
+|------|-------------|-----------|----------------|
+| 呼叫方式 | 程式碼編寫 | 宣告式介面 | 宣告式介面 |
+| 可讀性 | 一般 | 優秀，類似本地呼叫 | 優秀，類似本地呼叫 |
+| 內建負載均衡 | 需手動加 @LoadBalanced | 自動整合 | 需搭配 LoadBalancer |
+| 熔斷整合 | 手動整合 | 原生支援 | 手動整合 |
+| 請求攔截 | 需自訂 | 提供 RequestInterceptor | 透過 WebClient filter |
+| Spring 版本 | 3.x 起標記為過時 | Spring Cloud 維護 | Spring 6+ 原生支援 |
+| 額外依賴 | 無 | spring-cloud-starter-openfeign | 無（Spring 6 內建）|
+| 適用場景 | 維護舊專案 | 需要豐富功能生態 | 新專案首選 |
 
 ## 小結
 

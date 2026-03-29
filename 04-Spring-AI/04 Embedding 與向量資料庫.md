@@ -1,6 +1,6 @@
 # 04 Embedding 與向量資料庫
 
-> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+> **版本**：Spring AI 1.0+ / Spring Boot 3.4.x / Java 17+
 
 ## 什麼是 Embedding
 
@@ -48,9 +48,15 @@ public class EmbeddingService {
         this.embeddingModel = embeddingModel;
     }
 
+    // 方式一：透過 EmbeddingResponse 取得（可同時存取 metadata / token usage）
     public float[] getEmbedding(String text) {
         EmbeddingResponse response = embeddingModel.embedForResponse(List.of(text));
-        return response.getResult().getOutput();
+        return response.getResult().getOutput();  // Embedding::getOutput 回傳 float[]
+    }
+
+    // 方式二：直接呼叫 embed()，適合只需要向量的場景
+    public float[] getEmbeddingSimple(String text) {
+        return embeddingModel.embed(text);
     }
 
     public double cosineSimilarity(String text1, String text2) {
@@ -82,6 +88,18 @@ public class EmbeddingService {
 | Pinecone | 雲端託管向量資料庫 |
 | Qdrant | 高效能向量搜尋引擎 |
 | Weaviate | AI 原生向量資料庫 |
+
+### 向量資料庫選型指引
+
+| 特性 | PGVector | Redis | Chroma | Milvus / Qdrant |
+|------|----------|-------|--------|-----------------|
+| **適用規模** | 中小型（百萬級） | 中型（受記憶體限制） | 小型（原型驗證） | 大型（億級以上） |
+| **建置複雜度** | 低（PostgreSQL 擴充套件） | 低（Redis Stack） | 極低（嵌入式 / Docker） | 中高（分散式部署） |
+| **營運成本** | 低（複用現有 PG） | 中（記憶體成本較高） | 低 | 中高（獨立叢集） |
+| **Spring AI 整合成熟度** | 高（官方 Starter） | 高（官方 Starter） | 高（官方 Starter） | 高（官方 Starter） |
+| **最佳場景** | 已使用 PostgreSQL 的團隊，一庫多用 | 需要快取 + 向量搜尋組合 | 快速原型、本地開發測試 | 大規模生產環境、高吞吐量需求 |
+
+> **選型建議**：若團隊已使用 PostgreSQL，PGVector 是最低摩擦的起步方案；需要大規模生產環境時，再評估 Milvus 或 Qdrant。
 
 ### 使用 PGVector 範例
 
@@ -215,10 +233,57 @@ public class DocumentIngestionService {
 | JsonReader | JSON 文件 |
 | TikaDocumentReader | 支援多種格式（Word、Excel 等） |
 
+## 生產環境注意事項
+
+### 向量維度選擇
+
+Embedding 模型的維度直接影響儲存成本與查詢效能：
+
+| 模型 | 維度 | 特點 |
+|------|------|------|
+| text-embedding-3-small | 1536 | 性價比高，適合多數場景 |
+| text-embedding-3-large | 3072 | 精度更高，儲存與運算成本加倍 |
+| text-embedding-3-small（降維） | 512 / 256 | 可透過 `dimensions` 參數降維，犧牲少量精度換取效能 |
+
+> **原則**：先從 1536 維開始，若效能不足再評估降維或升維。
+
+### 索引策略：HNSW vs IVF
+
+| 索引類型 | 建置速度 | 查詢速度 | 記憶體佔用 | 適用場景 |
+|----------|---------|---------|-----------|---------|
+| HNSW | 慢 | 極快 | 高 | 查詢頻繁、資料量中等 |
+| IVF | 快 | 快 | 低 | 資料量大、可接受略低召回率 |
+
+PGVector 預設支援 HNSW，適合大多數 Spring AI 應用場景。
+
+### 大量資料匯入
+
+批次匯入時應注意：
+
+```java
+// 分批匯入，避免單次寫入過多造成 OOM 或 timeout
+int batchSize = 100;
+for (int i = 0; i < allChunks.size(); i += batchSize) {
+    List<Document> batch = allChunks.subList(i, Math.min(i + batchSize, allChunks.size()));
+    vectorStore.add(batch);
+}
+```
+
+### Embedding API 成本估算
+
+以 OpenAI text-embedding-3-small 為例（價格可能變動，請以官方為準）：
+
+- 約 $0.02 / 百萬 token
+- 一篇 1000 字的中文文件約 500~800 token
+- **10 萬篇文件首次匯入**約 5000~8000 萬 token ≈ $1~2 USD
+
+> **節省策略**：對已計算過的文件做 hash 比對，避免重複呼叫 Embedding API；查詢端可搭配快取（如 Redis）減少重複查詢的 API 呼叫。
+
 ## 小結
 
 Embedding 和向量資料庫是 AI 應用的重要基礎設施。Spring AI 透過統一的 `EmbeddingModel` 和 `VectorStore` 介面，讓開發者可以輕鬆實現語義搜尋和文件管理，為 RAG 應用奠定基礎。
 
 ## 延伸閱讀
 
+- [01 Spring AI 概述與快速開始](01%20Spring%20AI%20概述與快速開始.md) — Spring AI 基礎設定與核心概念
 - [05 RAG 檢索增強生成](05%20RAG%20檢索增強生成.md) — 運用 Embedding 與向量資料庫實現檢索增強生成

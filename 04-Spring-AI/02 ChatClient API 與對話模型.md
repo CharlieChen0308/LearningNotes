@@ -1,6 +1,6 @@
 # 02 ChatClient API 與對話模型
 
-> **版本**：Spring AI 1.0+ / Spring Boot 3.x / Java 17+
+> **版本**：Spring AI 1.0+ / Spring Boot 3.4.x / Java 17+
 
 ## ChatClient 簡介
 
@@ -71,7 +71,7 @@ ChatResponse response = chatClient.prompt()
     .chatResponse();
 
 // 取得回應文字
-String content = response.getResult().getOutput().getText();
+String content = response.getResult().getOutput().getContent();
 
 // 取得使用量資訊
 Usage usage = response.getMetadata().getUsage();
@@ -185,6 +185,8 @@ spring:
 
 手動管理對話歷史：
 
+> ⚠️ 此為教學簡化範例。Controller 為 singleton，成員變數 `conversationHistory` 在多使用者場景下會有併發問題。生產環境應使用 ChatMemory（見 [07 Advisors API](07%20Advisors%20API%20與對話記憶.md)）或 session-scoped 儲存。
+
 ```java
 @RestController
 public class ConversationController {
@@ -206,7 +208,7 @@ public class ConversationController {
             .call()
             .chatResponse();
 
-        String assistantMessage = response.getResult().getOutput().getText();
+        String assistantMessage = response.getResult().getOutput().getContent();
         conversationHistory.add(new AssistantMessage(assistantMessage));
 
         return assistantMessage;
@@ -215,6 +217,25 @@ public class ConversationController {
 ```
 
 > 更推薦使用 Spring AI 提供的 `ChatMemory` 和 `Advisors`，將在後續章節介紹。
+
+## ChatClient vs ChatModel 選擇指引
+
+| 面向 | ChatClient | ChatModel |
+|------|-----------|-----------|
+| API 風格 | 流暢式（Fluent API） | 低階方法呼叫 |
+| 適用場景 | 大多數應用開發（推薦） | 需要細粒度控制模型行為 |
+| Advisor 支援 | 內建整合 | 需自行組裝 |
+| 結構化輸出 | `.entity()` 一行搞定 | 需手動搭配 Converter |
+| 串流 | `.stream().content()` | 回傳 `Flux<ChatResponse>` |
+
+**建議**：優先使用 `ChatClient`，僅在需要直接操作底層 `ChatModel`（例如自訂 Advisor 管線、效能微調）時才降級使用。
+
+## 生產環境注意事項
+
+- **Token 上限管理**：設定 `maxTokens` 避免單次請求消耗過多額度；搭配 `Usage` 物件監控實際用量。
+- **逾時處理**：為 HTTP 呼叫設定合理的 `connectTimeout` 與 `readTimeout`，避免模型回應緩慢時阻塞執行緒。
+- **串流 vs 阻塞**：串流（`stream()`）適合即時顯示回應的場景，能降低首字延遲（Time to First Token）；阻塞（`call()`）適合後端批次處理或需要完整回應才能繼續的流程。
+- **併發請求**：注意 AI 供應商的 Rate Limit（RPM / TPM），必要時使用限流器（如 Resilience4j `RateLimiter`）保護上游 API。
 
 ## 小結
 
