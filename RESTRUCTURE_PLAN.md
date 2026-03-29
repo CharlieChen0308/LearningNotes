@@ -139,34 +139,34 @@ LearningNotes/
 
 | # | 新檔名 | 基於 | 重寫重點 | 狀態 |
 |---|--------|------|---------|------|
-| 2.1 | 01 排序演算法總覽.md | Algorithm 01-04 | 合併為一篇；修正歸併 BUG；加入時間/空間複雜度 + 穩定性比較表 | `[ ]` |
-| 2.2 | 02 查詢演算法總覽.md | Algorithm 05-09 | 合併為一篇；補齊複雜度分析 | `[ ]` |
-| 2.3 | 03 基礎資料結構.md | DS 01-06 | 合併：複雜度 + 順序表 + 連結串列 + 棧 + 佇列（含循環佇列、Deque）；連結 Java Collections | `[ ]` |
-| 2.4 | 04 樹與圖.md | DS 07-10 | 合併：二叉樹（含迭代遍歷）+ 哈夫曼樹（修 compareTo BUG）+ 圖（補程式碼） | `[ ]` |
-| 2.5 | 05 JVM 記憶體與垃圾回收.md | JVM 01-03 | 合併為一篇；加入 Metaspace/G1/ZGC；移除損壞圖片改用文字說明或 mermaid | `[ ]` |
+| 2.1 | 01 排序演算法總覽.md | Algorithm 01-04 | 合併為一篇；修正歸併 BUG；加入時間/空間複雜度 + 穩定性比較表 | `[x]` |
+| 2.2 | 02 查詢演算法總覽.md | Algorithm 05-09 | 合併為一篇；補齊複雜度分析 | `[x]` |
+| 2.3 | 03 基礎資料結構.md | DS 01-06 | 合併：複雜度 + 順序表 + 連結串列 + 棧 + 佇列（含循環佇列、Deque）；連結 Java Collections | `[x]` |
+| 2.4 | 04 樹與圖.md | DS 07-10 | 合併：二叉樹（含迭代遍歷）+ 哈夫曼樹（修 compareTo BUG）+ 圖（補程式碼） | `[x]` |
+| 2.5 | 05 JVM 記憶體與垃圾回收.md | JVM 01-03 | 合併為一篇；加入 Metaspace/G1/ZGC；移除損壞圖片改用文字說明或 mermaid | `[x]` |
 
 #### 01-Java-Core/
 
 | # | 新檔名 | 基於 | 重寫重點 | 狀態 |
 |---|--------|------|---------|------|
-| 2.6 | 01 Java 資料型別與變數.md | JB 001 | Java 17 基準；加入 var、record | `[ ]` |
-| 2.7 | 02 字串與集合框架.md | JB 002-004, 010 | String/StringBuilder + ArrayList/LinkedList/HashMap/TreeMap；加入 List.of()、SequencedMap | `[ ]` |
-| 2.8 | 03 物件導向進階.md | JB 005, 011, 012 | 例項化順序（含程式碼）+ 介面 default 方法 + 組合優於繼承 | `[ ]` |
-| 2.9 | 04 並行程式設計基礎.md | JB 006, 013 | ConcurrentHashMap（Java 8+ CAS）+ NIO Channel/Buffer/Selector + 執行緒池 | `[ ]` |
-| 2.10 | 05 反射與代理.md | JB 014-017 | 合併反射 + 3 種代理；加入比較表 + Spring 選擇策略 + Module System 限制 | `[ ]` |
-| 2.11 | 06 常用關鍵字與設計模式.md | JB 007, 018, 019 | 值傳遞 + final（含 effectively final）+ 單例（加入攻擊防護 + 比較表） | `[ ]` |
+| 2.6 | 01 Java 資料型別與變數.md | JB 001 | Java 17 基準；加入 var、record | `[x]` |
+| 2.7 | 02 字串與集合框架.md | JB 002-004, 010 | String/StringBuilder + ArrayList/LinkedList/HashMap/TreeMap；加入 List.of()、SequencedMap | `[x]` |
+| 2.8 | 03 物件導向進階.md | JB 005, 011, 012 | 例項化順序（含程式碼）+ 介面 default 方法 + 組合優於繼承 | `[x]` |
+| 2.9 | 04 並行程式設計基礎.md | JB 006, 013 | ConcurrentHashMap（Java 8+ CAS）+ NIO Channel/Buffer/Selector + 執行緒池 | `[x]` |
+| 2.10 | 05 反射與代理.md | JB 014-017 | 合併反射 + 3 種代理；加入比較表 + Spring 選擇策略 + Module System 限制 | `[x]` |
+| 2.11 | 06 常用關鍵字與設計模式.md | JB 007, 018, 019 | 值傳遞 + final（含 effectively final）+ 單例（加入攻擊防護 + 比較表） | `[x]` |
 
 **Phase 2 小計：11 篇重寫**（事務管理已移至 Phase 1 合併搬入）
 
 **Phase 2 驗收 Checklist（每篇）：**
 
-- `[ ]` 版本標注（Java 17/21、Spring Boot 3.x、React 19 等）
-- `[ ]` 所有程式碼可在對應版本下編譯/執行
-- `[ ]` 無外部圖片依賴（改用 mermaid 或文字說明）
-- `[ ]` 有交叉引用連結到相關篇章
-- `[ ]` 複雜度分析完整（演算法/資料結構篇）
-- `[ ]` 與官方文件核對無重大落差
-- `[ ]` Git commit：每完成一個子目錄提交一次
+- `[x]` 版本標注（Java 17/21、Spring Boot 3.x、React 19 等）
+- `[x]` 所有程式碼可在對應版本下編譯/執行
+- `[x]` 無外部圖片依賴（改用 mermaid 或文字說明）
+- `[x]` 有交叉引用連結到相關篇章
+- `[x]` 複雜度分析完整（演算法/資料結構篇）
+- `[x]` 與官方文件核對無重大落差
+- `[x]` Git commit：每完成一個子目錄提交一次
 
 ---
 
@@ -317,7 +317,7 @@ flowchart TD
 |-------|------|--------|------|
 | Phase 0 | 4 項 | 4 | 100% |
 | Phase 1 | 28 篇 | 28 | 100% |
-| Phase 2 | 11 篇 | 0 | 0% |
+| Phase 2 | 11 篇 | 11 | 100% |
 | Phase 3 | 21 篇 | 0 | 0% |
 | Phase 4 | 5 項 | 0 | 0% |
 | **合計** | **60 篇 + 9 項** | **0** | **0%** |
