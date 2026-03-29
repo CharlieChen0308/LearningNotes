@@ -1,6 +1,6 @@
-# 04 Spring的@Autowired註解、@Resource註解、@Service註解
+# 05 Spring的@Autowired註解、@Resource註解、@Service註解
 
-> **版本提示**：本篇基於 Spring 4.x。現代 Spring 6.x 推薦**建構子注入**（取代欄位注入），且單一建構子時 `@Autowired` 可省略。完整的現代配置方式請參考 [05 Spring Java 配置與註解驅動（現代方式）](05%20Spring%20Java%20%E9%85%8D%E7%BD%AE%E8%88%87%E8%A8%BB%E8%A7%A3%E9%A9%85%E5%8B%95%EF%BC%88%E7%8F%BE%E4%BB%A3%E6%96%B9%E5%BC%8F%EF%BC%89.md)。
+> **版本提示**：本篇基於 Spring 4.x。現代 Spring 6.x 推薦**建構子注入**（取代欄位注入），且單一建構子時 `@Autowired` 可省略。完整的現代配置方式請參考 [06 Spring Java 配置與註解驅動（現代方式）](06%20Spring%20Java%20配置與註解驅動（現代方式）.md)。
 
 ## 什麼是註解
 

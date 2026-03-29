@@ -1,6 +1,6 @@
 # 01 Spring的簡單配置和使用
 
-> **版本提示**：本篇基於 Spring 3.x，使用 XML 配置方式。現代 Spring 6.x 已全面改用 Java 配置與註解驅動，請參考 [05 Spring Java 配置與註解驅動（現代方式）](05%20Spring%20Java%20%E9%85%8D%E7%BD%AE%E8%88%87%E8%A8%BB%E8%A7%A3%E9%A9%85%E5%8B%95%EF%BC%88%E7%8F%BE%E4%BB%A3%E6%96%B9%E5%BC%8F%EF%BC%89.md)。
+> **版本提示**：本篇基於 Spring 3.x，使用 XML 配置方式。現代 Spring 6.x 已全面改用 Java 配置與註解驅動，請參考 [06 Spring Java 配置與註解驅動（現代方式）](06%20Spring%20Java%20配置與註解驅動（現代方式）.md)。
 
 筆記倉庫：[https://github.com/nnngu/LearningNotes](https://github.com/nnngu/LearningNotes)
 

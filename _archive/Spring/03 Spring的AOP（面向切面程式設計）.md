@@ -1,6 +1,6 @@
-# 02 Spring的AOP（面向切面程式設計）
+# 03 Spring的AOP（面向切面程式設計）
 
-> **版本提示**：本篇基於 Spring 4.x，使用 XML 配置 AOP。現代 Spring 6.x 推薦使用 `@Aspect` 註解方式，請參考 [06 Spring 註解式 AOP 開發](06%20Spring%20%E8%A8%BB%E8%A7%A3%E5%BC%8F%20AOP%20%E9%96%8B%E7%99%BC.md)。
+> **版本提示**：本篇基於 Spring 4.x，使用 XML 配置 AOP。現代 Spring 6.x 推薦使用 `@Aspect` 註解方式，請參考 [07 Spring 註解式 AOP 開發](07%20Spring%20註解式%20AOP%20開發.md)。
 
 ## 1、關於AOP
 

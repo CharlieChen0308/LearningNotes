@@ -1,4 +1,4 @@
-# 05 Spring Java 配置與註解驅動（現代方式）
+# 06 Spring Java 配置與註解驅動（現代方式）
 
 > 本系列第 01 篇介紹了 Spring 3.x 的 XML 配置方式。本篇對照 Spring Framework 6.x 官方文件，補充現代 Java-based 配置方式。兩種方式功能等價，但 Java 配置已成為主流。
 
