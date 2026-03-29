@@ -111,6 +111,29 @@ if (opt.isPresent()) {
 return opt.orElse(defaultValue);
 ```
 
+### 1.6 生產注意事項
+
+**序列化限制**：`Optional` 沒有實作 `Serializable`，不能直接作為 JPA Entity 欄位或 DTO 欄位使用。Jackson 預設也無法正確序列化 `Optional` 欄位。替代方案：Entity / DTO 欄位維持一般型別（允許 `null`），在 getter 回傳 `Optional`：
+
+```java
+// Entity / DTO 中的正確做法
+private String nickname;  // 欄位用普通型別
+
+public Optional<String> getNickname() {
+    return Optional.ofNullable(nickname);
+}
+```
+
+**效能考量**：每次呼叫 `Optional.of()` / `Optional.ofNullable()` 都會建立新物件。在高頻迴圈或效能敏感的熱點路徑中，直接使用 `null` 檢查仍然是合理的選擇：
+
+```java
+// 效能敏感場景：傳統 null 檢查更適合
+for (int i = 0; i < 1_000_000; i++) {
+    Value v = map.get(key);
+    if (v != null) { /* ... */ }  // 比 Optional.ofNullable(v) 少一次物件配置
+}
+```
+
 ## 2、異常體系
 
 ### 2.1 Java 異常層次

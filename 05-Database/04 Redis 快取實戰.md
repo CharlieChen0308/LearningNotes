@@ -80,15 +80,15 @@ public class RedisConfig {
         template.setHashKeySerializer(new StringRedisSerializer());
 
         // Value 使用 JSON 序列化（方便除錯，可讀性高）
-        Jackson2JsonRedisSerializer<Object> jsonSerializer =
-                new Jackson2JsonRedisSerializer<>(Object.class);
-
         ObjectMapper om = new ObjectMapper();
         om.activateDefaultTyping(
                 om.getPolymorphicTypeValidator(),
                 ObjectMapper.DefaultTyping.NON_FINAL
         );
-        jsonSerializer.setObjectMapper(om);
+
+        // Spring Boot 3.x 建議使用建構子注入，setObjectMapper() 已標記為 @Deprecated
+        Jackson2JsonRedisSerializer<Object> jsonSerializer =
+                new Jackson2JsonRedisSerializer<>(om, Object.class);
 
         template.setValueSerializer(jsonSerializer);
         template.setHashValueSerializer(jsonSerializer);
@@ -285,8 +285,19 @@ public CustomerDTO getCustomer(Long id) {
 
 **解決方案：分散式鎖**
 
+> 此為教學簡化範例，生產環境需額外考慮：
+> - 重試上限與退避策略（exponential backoff）
+> - 鎖的原子性釋放（Lua 腳本或 Redisson）
+> - 降級策略（重試耗盡後返回預設值或拋出明確例外）
+
 ```java
+private static final int MAX_RETRY = 3;
+
 public CustomerDTO getCustomerWithLock(Long id) {
+    return getCustomerWithLock(id, 0);
+}
+
+private CustomerDTO getCustomerWithLock(Long id, int retryCount) {
     String cacheKey = "customer:" + id;
     String lockKey = "lock:customer:" + id;
 
@@ -312,9 +323,14 @@ public CustomerDTO getCustomerWithLock(Long id) {
             redisTemplate.delete(lockKey);
         }
     } else {
-        // 未取得鎖，等待後重試
-        try { Thread.sleep(50); } catch (InterruptedException ignored) {}
-        return getCustomerWithLock(id);  // 重試
+        // 未取得鎖，等待後重試（設定重試上限避免無限遞迴）
+        if (retryCount >= MAX_RETRY) {
+            throw new RuntimeException("快取重建等待逾時，key=" + cacheKey);
+        }
+        try { Thread.sleep(50); } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
+        }
+        return getCustomerWithLock(id, retryCount + 1);
     }
 }
 ```
@@ -393,9 +409,13 @@ public void unlock(String lockKey, String value) {
 <dependency>
     <groupId>org.redisson</groupId>
     <artifactId>redisson-spring-boot-starter</artifactId>
-    <version>3.27.0</version>
+    <version>3.27.0</version> <!-- 請依實際 Spring Boot 版本查閱 Redisson 相容性矩陣 -->
 </dependency>
 ```
+
+> **版本相容性注意**：Redisson 的 major 版本與 Spring Boot 版本有對應關係。
+> 請參考 [Redisson GitHub Wiki](https://github.com/redisson/redisson#spring-boot-integration) 確認
+> 當前 Spring Boot 版本對應的 Redisson 版本，避免執行時期相容性問題。
 
 ```java
 @Service
@@ -600,7 +620,68 @@ public class RateLimiterService {
 
 ---
 
-## 7、小結
+## 7、Redis 運維與生產注意事項
+
+### 7.1 持久化策略
+
+| 方式 | 原理 | 優點 | 缺點 |
+|-----|------|------|------|
+| RDB（快照） | 定時將記憶體快照寫入磁碟 | 備份/還原速度快，檔案緊湊 | 兩次快照之間的資料可能遺失 |
+| AOF（日誌追加） | 記錄每筆寫入指令 | 資料持久性高（可設 `everysec`/`always`） | 檔案較大，重播還原較慢 |
+| RDB + AOF 混合 | 結合兩者優勢 | 兼顧備份速度與資料安全 | 需同時管理兩種機制 |
+
+**建議**：生產環境同時啟用 RDB（用於定期備份與災難復原）與 AOF（`appendfsync everysec` 確保最多遺失 1 秒資料），達到最佳安全性。
+
+### 7.2 高可用架構
+
+| 方案 | 用途 | 適用場景 |
+|-----|------|---------|
+| Redis Sentinel | 自動故障轉移（failover）+ 監控 | 主從架構，資料量單機可承受 |
+| Redis Cluster | 資料分片（sharding）+ 高可用 | 資料量超過單機記憶體，需水平擴展 |
+
+**選擇原則**：
+
+- 資料量 < 單機記憶體上限 → Sentinel（架構簡單，維運成本低）
+- 資料量需水平擴展或寫入吞吐量極高 → Cluster（自動分片，但應用端需注意跨 slot 操作限制）
+
+### 7.3 記憶體淘汰策略
+
+透過 `maxmemory-policy` 控制記憶體滿時的行為：
+
+| 策略 | 說明 | 適用場景 |
+|-----|------|---------|
+| `allkeys-lru` | 淘汰最近最少使用的 key | **快取場景**（推薦） |
+| `volatile-lru` | 只淘汰有設定 TTL 的 key（LRU） | 快取與持久資料混用 |
+| `allkeys-lfu` | 淘汰最不常使用的 key（Redis 4.0+） | 存取頻率差異大的場景 |
+| `noeviction` | 記憶體滿時拒絕寫入，回傳錯誤 | **資料儲存場景**（不可遺失） |
+
+**建議**：純快取用途使用 `allkeys-lru`；若 Redis 同時作為資料儲存，使用 `noeviction` 並搭配監控告警。
+
+### 7.4 連線安全
+
+| 項目 | 說明 |
+|-----|------|
+| 密碼認證 | 生產環境必須設定 `requirepass`，禁止無密碼暴露 |
+| TLS 加密 | Redis 6.0+ 原生支援 TLS，跨網路傳輸時務必啟用 |
+| Redis ACL | Redis 6.0+ 支援細粒度存取控制，可限制使用者只能操作特定 key 或指令 |
+| 網路隔離 | `bind` 限定監聽介面，禁止直接暴露至公網，搭配防火牆規則 |
+
+```yaml
+# application.yml 生產環境範例
+spring:
+  data:
+    redis:
+      host: redis.internal.example.com
+      port: 6379
+      password: ${REDIS_PASSWORD}    # 從環境變數或 secret manager 注入
+      ssl:
+        enabled: true                # 啟用 TLS
+      username: app_user             # Redis ACL 使用者（Redis 6.0+）
+```
+
+---
+
+## 8、小結
 
 | 要點 | 說明 |
 |-----|------|
@@ -608,12 +689,17 @@ public class RateLimiterService {
 | 序列化 | 推薦 JSON 序列化（可讀性好），Key 用 StringRedisSerializer |
 | Spring Cache | @Cacheable / @CachePut / @CacheEvict，搭配 RedisCacheManager 設定 TTL |
 | 快取穿透 | 空值快取（短 TTL）+ 布隆過濾器 |
-| 快取擊穿 | 分散式鎖保護熱點 key 重建 |
+| 快取擊穿 | 分散式鎖保護熱點 key 重建（注意重試上限） |
 | 快取雪崩 | 隨機 TTL + 多級快取（Caffeine + Redis） |
 | 分散式鎖 | 推薦 Redisson RLock，支援看門狗自動續期 |
 | 原子操作 | Lua 腳本保證多步驟原子性（限流、庫存扣減） |
+| 持久化 | RDB + AOF 混合模式，兼顧備份速度與資料安全 |
+| 高可用 | 單機容量足夠用 Sentinel，需水平擴展用 Cluster |
+| 記憶體淘汰 | 快取用 `allkeys-lru`，資料儲存用 `noeviction` |
+| 連線安全 | 密碼 + TLS + ACL + 網路隔離，缺一不可 |
 
 ### 延伸閱讀
+
 
 - [01 PostgreSQL 與 MySQL 基礎](./01%20PostgreSQL%20與%20MySQL%20基礎.md) -- 資料型別、DDL/DML、JSON 操作
 - [02 索引原理與 SQL 優化](./02%20索引原理與%20SQL%20優化.md) -- 索引結構、EXPLAIN 分析、查詢最佳化

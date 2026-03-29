@@ -87,7 +87,7 @@ List<String> list = List.of("a", "b", "c");
 Stream<String> s1 = list.stream();
 
 // 從陣列
-Stream<int[]> s2 = Arrays.stream(new int[]{1, 2, 3}).boxed();
+Stream<Integer> s2 = Arrays.stream(new int[]{1, 2, 3}).boxed();
 
 // 直接建立
 Stream<String> s3 = Stream.of("x", "y", "z");
@@ -107,10 +107,12 @@ names.stream()
     .map(String::toUpperCase)              // 轉換：["ALICE", "ANNA"]
     .sorted()                              // 排序：["ALICE", "ANNA"]
     .distinct()                            // 去重
-    .peek(System.out::println)             // 偵錯用（不影響流）
+    .peek(System.out::println)             // 偵錯用（見下方注意事項）
     .limit(10)                             // 取前 N 個
     .skip(1);                              // 跳過前 N 個
 ```
+
+> **`peek` 注意**：在短路操作（如 `findFirst()`、`anyMatch()`）中，`peek` **不保證**對所有元素執行。它僅在元素實際被下游消費時才觸發，因此不應依賴 `peek` 做計數或累加等有副作用的操作。
 
 ### 3.3 終端操作（Terminal）
 
@@ -145,9 +147,13 @@ List<User> users = List.of(
     new User("Diana", 35, "Marketing")
 );
 
-// 轉 Map
+// 轉 Map（注意：key 重複時會拋 IllegalStateException）
 Map<String, Integer> nameAge = users.stream()
     .collect(Collectors.toMap(User::name, User::age));
+
+// 處理 key 衝突：提供 merge function（生產環境最常見的 Stream 錯誤）
+Map<String, Integer> nameAge2 = users.stream()
+    .collect(Collectors.toMap(User::name, User::age, (v1, v2) -> v1));
 
 // 分組
 Map<String, List<User>> byDept = users.stream()
@@ -211,9 +217,21 @@ long sum = IntStream.rangeClosed(1, 10_000_000)
 
 **適合場景**：CPU 密集型的大量純計算。
 
-## 5、常見陷阱
+## 5、Stream vs for-loop 取捨
 
-### 5.1 Stream 只能消費一次
+Stream 不是萬能的，以下場景建議使用傳統 for-loop：
+
+- **需要提前跳出**：Stream 沒有 `break`/`continue`（`takeWhile` 只能處理部分情境）
+- **小集合的效能敏感路徑**：Stream 建立管線有固定開銷，在超高頻呼叫的小集合場景中，for-loop 更快
+- **需要 checked exception**：Lambda 不允許拋出 checked exception，若強行包裝會降低可讀性
+- **複雜的多步驟狀態變更**：當邏輯涉及多個變數的交叉修改時，for-loop 的可讀性通常更好
+- **需要索引值**：Stream 天生不帶索引，雖然可用 `IntStream.range` 模擬，但不如 for-loop 直覺
+
+> **經驗法則**：如果 Stream 寫出來比 for-loop 更難讀，就用 for-loop。
+
+## 6、常見陷阱
+
+### 6.1 Stream 只能消費一次
 
 ```java
 Stream<String> stream = List.of("a", "b").stream();
@@ -221,7 +239,7 @@ stream.forEach(System.out::println);
 // stream.forEach(System.out::println);  // IllegalStateException!
 ```
 
-### 5.2 修改外部狀態
+### 6.2 修改外部狀態
 
 ```java
 // 錯誤：Lambda 中修改外部集合
@@ -236,7 +254,7 @@ var results = names.stream()
     .toList();
 ```
 
-## 6、小結
+## 7、小結
 
 | 概念 | 重點 |
 |------|------|
