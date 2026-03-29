@@ -57,7 +57,7 @@ public class OrderService {
 
     public Map<String, Object> getOrder(Long userId) {
         // "service-user" 是服務名稱，LoadBalancer 會自動解析為具體 IP:Port
-        Map user = restTemplate.getForObject(
+        Map<String, Object> user = restTemplate.getForObject(
             "http://service-user/user/" + userId, Map.class);
         // ...
         return orderInfo;

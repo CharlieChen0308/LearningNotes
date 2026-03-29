@@ -95,7 +95,7 @@ Spring Boot 的父 POM 已經管理了所有 Starter 的版本，不需要手動
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.0</version>
+    <version>3.4.1</version>
 </parent>
 ```
 
@@ -107,7 +107,7 @@ Spring Boot 的父 POM 已經管理了所有 Starter 的版本，不需要手動
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-dependencies</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.1</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>

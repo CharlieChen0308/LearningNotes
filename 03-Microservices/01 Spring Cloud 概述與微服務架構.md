@@ -1,6 +1,6 @@
 # 01 Spring Cloud 概述與微服務架構
 
-> **版本**：Spring Cloud 2023.x / Spring Boot 3.x / Java 17+
+> **版本**：Spring Cloud 2024.0 (Moorgate) / Spring Boot 3.4.x / Java 17+
 
 ## 什麼是 Spring Cloud
 

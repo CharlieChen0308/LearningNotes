@@ -161,7 +161,7 @@ Docker Compose 用於定義和管理多容器應用程式。透過一個 `docker
 ### Spring Boot + PostgreSQL + Redis 完整範例
 
 ```yaml
-version: "3.9"
+version: "3.9"  # Docker Compose V2 已不需要此欄位，可省略
 
 services:
   # ===== Spring Boot 應用程式 =====

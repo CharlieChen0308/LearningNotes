@@ -33,7 +33,7 @@ Spring AI 提供了多種 ChatMemory 實現：
 
 | 實現 | 儲存位置 |
 |------|---------|
-| InMemoryChatMemory | 記憶體（開發測試用）|
+| MessageWindowChatMemory | 記憶體（開發測試用，搭配 InMemoryChatMemoryRepository）|
 | CassandraChatMemory | Apache Cassandra |
 | JdbcChatMemory | 關聯式資料庫（JDBC）|
 | Neo4jChatMemory | Neo4j 圖資料庫 |
@@ -46,7 +46,10 @@ public class ChatMemoryConfig {
 
     @Bean
     public ChatMemory chatMemory() {
-        return new InMemoryChatMemory();
+        return MessageWindowChatMemory.builder()
+            .chatMemoryRepository(new InMemoryChatMemoryRepository())
+            .maxMessages(20)
+            .build();
     }
 
     @Bean
@@ -122,27 +125,27 @@ public ChatMemory chatMemory(JdbcTemplate jdbcTemplate) {
 
 ```java
 @Component
-public class LoggingAdvisor implements CallAroundAdvisor {
+public class LoggingAdvisor implements CallAdvisor {
 
     private static final Logger log = LoggerFactory.getLogger(LoggingAdvisor.class);
 
     @Override
-    public AdvisedResponse aroundCall(AdvisedRequest advisedRequest,
-                                       CallAroundAdvisorChain chain) {
+    public ChatClientResponse adviseCall(ChatClientRequest request,
+                                       CallAdvisorChain chain) {
         // 請求前
         log.info("AI 請求 - 使用者訊息: {}",
-            advisedRequest.userText());
+            request.userText());
 
         long start = System.currentTimeMillis();
 
         // 執行實際呼叫
-        AdvisedResponse response = chain.nextAroundCall(advisedRequest);
+        ChatClientResponse response = chain.nextCall(request);
 
         // 回應後
         long elapsed = System.currentTimeMillis() - start;
         log.info("AI 回應 - 耗時: {}ms, 內容長度: {}",
             elapsed,
-            response.response().getResult().getOutput().getText().length());
+            response.chatResponse().getResult().getOutput().getText().length());
 
         return response;
     }
@@ -163,16 +166,16 @@ public class LoggingAdvisor implements CallAroundAdvisor {
 
 ```java
 @Component
-public class ContentFilterAdvisor implements CallAroundAdvisor {
+public class ContentFilterAdvisor implements CallAdvisor {
 
     private static final List<String> BLOCKED_KEYWORDS = List.of(
         "密碼", "信用卡號", "身分證字號"
     );
 
     @Override
-    public AdvisedResponse aroundCall(AdvisedRequest advisedRequest,
-                                       CallAroundAdvisorChain chain) {
-        String userText = advisedRequest.userText();
+    public ChatClientResponse adviseCall(ChatClientRequest request,
+                                       CallAdvisorChain chain) {
+        String userText = request.userText();
 
         // 檢查使用者輸入是否包含敏感關鍵字
         for (String keyword : BLOCKED_KEYWORDS) {
@@ -182,12 +185,14 @@ public class ContentFilterAdvisor implements CallAroundAdvisor {
                     .generations(List.of(new Generation(
                         new AssistantMessage("抱歉，為了安全考量，我無法處理包含敏感資訊的請求。"))))
                     .build();
-                return new AdvisedResponse(safeResponse,
-                    advisedRequest.adviseContext());
+                return ChatClientResponse.builder()
+                    .chatResponse(safeResponse)
+                    .context(request.context())
+                    .build();
             }
         }
 
-        return chain.nextAroundCall(advisedRequest);
+        return chain.nextCall(request);
     }
 
     @Override
@@ -202,9 +207,9 @@ public class ContentFilterAdvisor implements CallAroundAdvisor {
 }
 ```
 
-> **API 版本注意**：上述範例中 `new AdvisedResponse(chatResponse, adviseContext)` 的建構方式與
-> `ChatResponse.builder()` 的用法，請依實際使用的 Spring AI 版本確認。Spring AI 1.0.x 的 API
-> 仍在快速演進中，部分類別的簽章可能在小版本間有所調整，建議參照官方文件或 IDE 自動補全確認。
+> **API 版本注意**：上述範例使用 Spring AI 1.0.0 GA 的 API（`CallAdvisor`、`ChatClientRequest`、
+> `ChatClientResponse`）。早期預覽版使用的 `CallAroundAdvisor`、`AdvisedRequest`、`AdvisedResponse`
+> 已在 GA 版本中重新命名，請確認依賴版本為 1.0.0 以上。
 
 ## 組合多個 Advisors
 

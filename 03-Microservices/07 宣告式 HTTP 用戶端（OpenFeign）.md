@@ -131,7 +131,7 @@ logging:
 
 > 此為教學簡化範例，生產環境需額外考慮：
 > - Token 刷新機制（過期自動重新取得）
-> - 多執行緒環境下 RequestContextHolder 的傳遞問題（如使用 Hystrix/異步呼叫）
+> - 多執行緒環境下 RequestContextHolder 的傳遞問題（如使用 `@Async` 或 `CompletableFuture`）
 
 ```java
 @Configuration

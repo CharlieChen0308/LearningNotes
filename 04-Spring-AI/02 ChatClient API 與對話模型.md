@@ -36,7 +36,7 @@ ChatClient chatClient = ChatClient.create(chatModel);
 ChatClient chatClient(ChatClient.Builder builder) {
     return builder
         .defaultSystem("你是一位專業的 Java 技術顧問，用繁體中文回答。")
-        .defaultAdvisors(new MessageChatMemoryAdvisor(chatMemory))
+        .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
         .build();
 }
 ```
@@ -71,7 +71,7 @@ ChatResponse response = chatClient.prompt()
     .chatResponse();
 
 // 取得回應文字
-String content = response.getResult().getOutput().getContent();
+String content = response.getResult().getOutput().getText();
 
 // 取得使用量資訊
 Usage usage = response.getMetadata().getUsage();
@@ -208,7 +208,7 @@ public class ConversationController {
             .call()
             .chatResponse();
 
-        String assistantMessage = response.getResult().getOutput().getContent();
+        String assistantMessage = response.getResult().getOutput().getText();
         conversationHistory.add(new AssistantMessage(assistantMessage));
 
         return assistantMessage;

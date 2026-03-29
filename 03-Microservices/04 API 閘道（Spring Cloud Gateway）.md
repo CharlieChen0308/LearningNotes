@@ -240,7 +240,7 @@ public KeyResolver ipKeyResolver() {
 
 | 維度 | Spring Cloud Gateway | Nginx | Kong | Apache APISIX |
 |------|---------------------|-------|------|---------------|
-| **生態整合** | 與 Spring Cloud 深度整合（Eureka、Config、Sleuth） | 通用型，需自行整合服務發現 | 支援多種服務發現，Kubernetes 原生整合 | 支援 etcd/Nacos/Eureka，雲原生友好 |
+| **生態整合** | 與 Spring Cloud 深度整合（Eureka、Config、Micrometer Tracing） | 通用型，需自行整合服務發現 | 支援多種服務發現，Kubernetes 原生整合 | 支援 etcd/Nacos/Eureka，雲原生友好 |
 | **效能** | 基於 Netty，非阻塞模型，中高吞吐量 | C 語言實作，極高吞吐量與低延遲 | 基於 Nginx/OpenResty，高吞吐量 | 基於 Nginx/OpenResty，高吞吐量，動態路由效能佳 |
 | **外掛生態** | 透過 Filter 機制擴展，需 Java 開發 | Lua 模組或商業版 Nginx Plus | 豐富外掛市場（認證、限流、日誌等） | 豐富外掛，支援多語言開發（Lua、Java、Go） |
 | **學習曲線** | Java/Spring 開發者容易上手 | 配置語法簡單，進階 Lua 開發門檻較高 | 管理 API 友好，但架構理解需時間 | 控制面板直觀，外掛開發需了解 APISIX 架構 |

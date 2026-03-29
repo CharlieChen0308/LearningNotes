@@ -261,11 +261,9 @@ management:
     web:
       exposure:
         include: health,prometheus
-  prometheus:
-    metrics:
-      export:
-        enabled: true
 ```
+
+> **Spring Boot 3.x 注意**：只要加入 `micrometer-registry-prometheus` 依賴並暴露 `prometheus` 端點，Prometheus 指標即自動啟用，無需額外設定 `management.prometheus.metrics.export.enabled`。
 
 存取 `http://localhost:8080/actuator/prometheus` 即可取得 Prometheus 格式的指標資料。
 

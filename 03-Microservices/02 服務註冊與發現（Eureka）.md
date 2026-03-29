@@ -15,6 +15,16 @@ Netflix Eureka 是 Spring Cloud 中最經典的服務註冊與發現元件，包
 
 > **注意**：Eureka 目前已進入維護模式（maintenance mode），不再新增功能，但仍廣泛運行於許多生產環境中。較新的替代方案包括 HashiCorp Consul 和 Alibaba Nacos，建議新專案評估後選用。
 
+### 主流服務發現方案比較
+
+| 比較維度 | Eureka | Consul | Nacos |
+|---------|--------|--------|-------|
+| 功能範圍 | 僅服務發現 | 服務發現 + KV 配置 + 服務網格 | 服務發現 + 配置管理 + 流量管理 |
+| 部署複雜度 | 低（Spring Boot 應用直接啟動） | 中（需獨立部署 Agent） | 中（需獨立部署，提供 Docker 映像） |
+| 社群活躍度 | 低（Netflix 已停止新功能開發） | 高（HashiCorp 持續維護） | 高（阿里巴巴活躍維護，國內社群龐大） |
+| 配置管理 | 不支援（需搭配 Spring Cloud Config） | 內建 KV Store | 內建，支援多格式與命名空間 |
+| CP/AP 模式 | AP（優先可用性，允許暫時不一致） | 預設 CP（強一致性），可切換 AP | 同時支援 CP 與 AP，依實例類型自動切換 |
+
 ## 搭建 Eureka Server
 
 ### 1. 新增依賴
@@ -136,7 +146,7 @@ public class OrderController {
     @GetMapping("/{userId}")
     public Map<String, Object> getOrder(@PathVariable Long userId) {
         // 透過服務名稱呼叫，而非具體 IP
-        Map user = restTemplate.getForObject(
+        Map<String, Object> user = restTemplate.getForObject(
             "http://service-user/user/" + userId, Map.class);
 
         Map<String, Object> order = new HashMap<>();

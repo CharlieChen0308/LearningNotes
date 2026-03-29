@@ -41,6 +41,8 @@ public interface UserClient {
 
 ### 2.2 建立 Proxy Bean
 
+> ⚠️ 此為教學簡化範例，生產環境應使用服務發現或外部化配置管理服務位址。
+
 ```java
 @Configuration
 public class HttpClientConfig {
@@ -377,7 +379,7 @@ WebClient webClient = loadBalancedBuilder
 | **需要開箱即用的 Spring Cloud 整合** | OpenFeign 的 `@FeignClient(name = "...")` 直接整合服務發現與負載均衡，HTTP Interface 需手動配置 | 繼續使用 OpenFeign |
 | **既有大型微服務專案** | 大量 Feign Client 遷移成本高，且 OpenFeign 仍在維護中 | 維持 OpenFeign，新模組可用 HTTP Interface |
 | **團隊不熟悉 WebClient** | 響應式場景下需要 WebClient 知識，學習曲線較高 | 先用 RestClient（同步），待團隊熟悉後再引入 WebClient |
-| **需要內建的 fallback 機制** | OpenFeign + Sentinel/Hystrix 提供宣告式 fallback，HTTP Interface 需自行實作 | 使用 OpenFeign 或手動整合 Resilience4j |
+| **需要內建的 fallback 機制** | OpenFeign + Sentinel/Resilience4j 提供宣告式 fallback，HTTP Interface 需自行實作 | 使用 OpenFeign 或手動整合 Resilience4j |
 
 > **遷移建議**：既有專案不必急於遷移。可採取漸進策略 — 新模組使用 HTTP Interface，既有模組維持 OpenFeign，兩者可共存於同一專案中。
 

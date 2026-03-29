@@ -3,7 +3,7 @@
 > **版本**: Spring Framework 6.x
 > **來源**: `_archive/Spring/07 Spring 註解式 AOP 開發.md`
 
-> 本系列第 03 篇介紹了 Spring AOP 的 XML 配置方式。本篇對照 Spring Framework 6.x 官方文件，補充 `@AspectJ` 註解式 AOP 開發方式。AOP 的核心概念不變，只是配置方式從 XML 轉為註解。
+> 本篇聚焦於註解式 AOP 開發，這是 Spring Boot 環境下的主流方式。內容對照 Spring Framework 6.x 官方文件，介紹 `@AspectJ` 註解式 AOP 開發方式。AOP 的核心概念不變，只是配置方式從 XML 轉為註解。
 
 ## XML vs 註解方式對照
 

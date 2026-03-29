@@ -244,6 +244,8 @@ ON DUPLICATE KEY UPDATE
     updated_at = CURRENT_TIMESTAMP;
 ```
 
+> **MySQL 8.0.20+ 注意**：`VALUES(col)` 語法已被標記為棄用，建議改用別名語法：`INSERT INTO ... AS new_row ON DUPLICATE KEY UPDATE name = new_row.name`。
+
 ---
 
 ## 5、JSON 操作

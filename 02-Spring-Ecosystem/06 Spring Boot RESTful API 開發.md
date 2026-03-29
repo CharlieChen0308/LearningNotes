@@ -307,15 +307,9 @@ public class WebConfig implements WebMvcConfigurer {
 }
 ```
 
-### 在配置檔案中設定（Spring Boot 3.x）
+### 補充：YAML 配置方式
 
-```yaml
-spring:
-  web:
-    cors:
-      allowed-origins: http://localhost:3000
-      allowed-methods: GET,POST,PUT,DELETE,PATCH
-```
+> **注意**：`spring.web.cors` 並非 Spring Boot 的有效屬性路徑，無法透過 `application.yml` 直接設定 CORS。請使用上方的 `WebMvcConfigurer` 程式化設定方式。
 
 ## 生產注意事項
 
