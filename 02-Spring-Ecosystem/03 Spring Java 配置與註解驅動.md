@@ -245,6 +245,76 @@ public class DataSourceConfig {
 }
 ```
 
+## 取捨分析
+
+### XML 配置仍有價值的場景
+
+雖然 Java 配置已成為主流，但 XML 在以下情境仍然實用：
+
+- **整合 Legacy 系統**：舊專案已有大量 XML 配置，逐步遷移比一次重寫更安全
+- **第三方函式庫無原始碼**：無法加上 `@Component` 等註解時，XML 的 `<bean>` 定義是最直接的方式
+- **非開發人員需要調整配置**：XML 不需要編譯，維運人員可直接修改（但現代做法更傾向用 `application.yml`）
+
+### Java 配置 vs 純註解掃描
+
+| 面向 | `@Configuration` + `@Bean` | `@ComponentScan` + 元件註解 |
+|------|---------------------------|----------------------------|
+| 控制粒度 | 高——每個 Bean 的建立邏輯清晰可見 | 低——依賴框架自動掃描 |
+| 適用場景 | 第三方類別、需要複雜初始化邏輯 | 自己撰寫的業務類別 |
+| 可讀性 | 集中管理，一目瞭然 | 分散在各類別上，需靠 IDE 輔助 |
+
+**實務建議**：兩者混用最常見——業務類別用元件註解，基礎設施（DataSource、RestTemplate、ObjectMapper 等）用 `@Bean` 方法明確定義。
+
+## 生產注意事項
+
+### @ComponentScan 掃描範圍控制
+
+`@ComponentScan` 預設掃描當前套件及所有子套件。**不要**把啟動類放在根套件（如 `com`），否則會掃描整個 classpath，導致：
+
+- 啟動時間大幅增加
+- 意外載入不相關的 Bean（尤其在多模組專案中）
+
+```java
+// 明確指定掃描範圍，避免過度掃描
+@ComponentScan(basePackages = {
+    "com.example.service",
+    "com.example.repository"
+})
+
+// 或用 excludeFilters 排除特定類別
+@ComponentScan(
+    basePackages = "com.example",
+    excludeFilters = @ComponentScan.Filter(
+        type = FilterType.REGEX,
+        pattern = "com\\.example\\.legacy\\..*"
+    )
+)
+```
+
+### @Configuration 的 proxyBeanMethods
+
+`@Configuration` 預設會透過 CGLIB 代理確保 `@Bean` 方法之間互相呼叫時回傳同一個 singleton 實例。但在以下場景可以關閉：
+
+```java
+// GraalVM Native Image 或不需要 Bean 方法互相呼叫時
+@Configuration(proxyBeanMethods = false)
+public class LightweightConfig {
+
+    @Bean
+    public MyService myService() {
+        return new MyService();
+    }
+}
+```
+
+- `proxyBeanMethods = true`（預設）：產生 CGLIB 代理，保證 singleton 語義
+- `proxyBeanMethods = false`：不產生代理，啟動更快、記憶體更少，**GraalVM Native Image 編譯必須設為 false**
+
+## 延伸閱讀
+
+- [01 Spring Core — DI 與 IoC](01%20Spring%20Core%20—%20DI%20與%20IoC.md)——理解依賴注入的基礎原理
+- [04 Spring Boot 自動配置與 Starters](04%20Spring%20Boot%20自動配置與%20Starters.md)——Java 配置如何被 Spring Boot 進一步自動化
+
 ## 小結
 
 Spring Framework 6.x 的 Java-based 配置完全取代了 XML，提供了型別安全、重構友好的配置體驗。核心要點：使用 `@Configuration` + `@Bean` 定義配置，使用元件註解 + `@ComponentScan` 自動偵測，優先使用建構子注入。

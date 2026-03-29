@@ -208,6 +208,12 @@ spring:
 | 等同於 | `@Controller` | `@Controller` + `@ResponseBody` |
 | 適用場景 | 伺服器端渲染 | 前後端分離 / REST API |
 
+### 取捨分析：何時選用哪一個
+
+- **`@RestController`**：絕大多數現代專案的首選。前後端分離架構下，後端只負責提供 JSON API，不需要視圖渲染。程式碼更簡潔，不必在每個方法上重複寫 `@ResponseBody`。
+- **`@Controller`**：當專案需要伺服器端渲染（SSR）時使用，例如後台管理介面搭配 Thymeleaf、郵件模板渲染、或需要返回檔案下載頁面。
+- **混合使用**：同一個 Controller 中既要返回頁面又要返回 JSON 時，使用 `@Controller` 並在需要的方法上加 `@ResponseBody`。此模式適合過渡期專案（從 SSR 逐步遷移到前後端分離），但長期建議拆分為獨立的 Controller。
+
 如果同一個 Controller 中既要返回頁面又要返回 JSON，使用 `@Controller` 並在需要的方法上加 `@ResponseBody`：
 
 ```java
@@ -228,6 +234,28 @@ public class PageController {
 }
 ```
 
+## 生產注意事項
+
+### Jackson 序列化安全
+
+- **絕對不要**直接序列化 Entity 物件到前端，務必使用 DTO 隔離。Entity 可能包含密碼雜湊、內部 ID、審計欄位等敏感資訊。
+- 避免使用 `@JsonIgnore` 作為唯一的安全屏障——忘記加就是資料外洩。正確做法是**只在 DTO 中放前端需要的欄位**。
+- 關閉 `FAIL_ON_UNKNOWN_PROPERTIES`（Spring Boot 預設已關閉）以避免前端多傳欄位時報錯，但要注意這也意味著不會提醒拼字錯誤。
+
+### 大型 Payload 效能
+
+- `@RequestBody` 預設會將整個請求正文讀入記憶體。對於大型 JSON（如批量匯入），考慮使用 `InputStream` 搭配 Jackson Streaming API 逐筆處理。
+- 設定 `server.tomcat.max-http-form-post-size` 和 `spring.servlet.multipart.max-request-size` 限制請求大小，防止記憶體溢出攻擊。
+
+### Content Negotiation
+
+Spring MVC 支援根據 `Accept` 標頭返回不同格式（JSON、XML 等）。預設只啟用 JSON；若需支援 XML，加入 `jackson-dataformat-xml` 依賴即可。但實務上建議**只支援 JSON**，減少維護成本與測試範圍。
+
 ## 小結
 
 現代 Spring MVC 已經從 XML 配置 + JSP 演進到註解驅動 + RESTful API 的開發模式。搭配 Spring Boot，開發者可以用極少的配置快速建立功能完整的 Web 服務。核心要掌握的就是各種請求參數繫結註解和回應控制方式。
+
+## 延伸閱讀
+
+- [06 Spring Boot RESTful API 開發](06%20Spring%20Boot%20RESTful%20API%20開發.md) — RESTful API 建立、回應方式取捨、生產注意事項
+- [08 Spring MVC 例外處理與驗證](08%20Spring%20MVC%20例外處理與驗證.md) — 全域例外處理、Jakarta Validation、自訂驗證註解

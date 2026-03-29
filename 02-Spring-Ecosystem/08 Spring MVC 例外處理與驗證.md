@@ -301,6 +301,60 @@ public record CreateCustomerRequest(
 ) {}
 ```
 
+## 替代方案：Spring Boot 3.x ProblemDetail（RFC 7807）
+
+Spring Boot 3.x 內建支援 RFC 7807 Problem Details 標準錯誤格式，不需要自訂 `ErrorResponse`：
+
+```java
+// 啟用 RFC 7807 支援
+// application.yml
+spring:
+  mvc:
+    problemdetails:
+      enabled: true
+```
+
+啟用後，Spring MVC 內建的例外（如 `MethodArgumentNotValidException`、`HttpRequestMethodNotSupportedException`）會自動返回標準格式：
+
+```json
+{
+    "type": "about:blank",
+    "title": "Bad Request",
+    "status": 400,
+    "detail": "驗證失敗",
+    "instance": "/api/users"
+}
+```
+
+也可以在 `@ExceptionHandler` 中手動建構 `ProblemDetail`：
+
+```java
+@ExceptionHandler(ResourceNotFoundException.class)
+public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+        HttpStatus.NOT_FOUND, ex.getMessage());
+    problem.setTitle("資源不存在");
+    problem.setProperty("timestamp", Instant.now());
+    return problem;
+}
+```
+
+## 取捨分析：例外處理方式比較
+
+| 方式 | 優點 | 缺點 | 適用場景 |
+|------|------|------|----------|
+| `@ExceptionHandler`（Controller 內） | 簡單直觀，可針對特定 Controller 客製 | 無法跨 Controller 共用，容易產生重複程式碼 | 單一 Controller 有獨特的錯誤處理邏輯 |
+| `@RestControllerAdvice` | 全域統一，一處維護 | 所有 Controller 共用同一套邏輯，彈性較低 | 大多數專案的標準做法 |
+| `ResponseStatusException` | 不需定義自訂例外類別，一行程式碼即可拋出 | 錯誤處理邏輯散落在業務程式碼中，難以統一格式 | 快速原型、小型專案 |
+| `ProblemDetail`（RFC 7807） | 業界標準格式，跨語言/跨團隊互通性佳 | 需要 Spring Boot 3.x+，自訂欄位需額外處理 | 新專案、對外公開 API、微服務架構 |
+
+**實務建議**：新專案建議採用 `@RestControllerAdvice` + `ProblemDetail` 組合——用 `@RestControllerAdvice` 集中管理，用 `ProblemDetail` 作為標準回應格式。既有專案若已有自訂 `ErrorResponse`，不必強行遷移，但對外 API 可考慮逐步採用 RFC 7807。
+
 ## 小結
 
 Spring MVC 的例外處理（`@RestControllerAdvice` + `@ExceptionHandler`）和資料驗證（Jakarta Validation + `@Valid`）是構建健壯 API 的基石。全域例外處理統一錯誤回應格式，驗證機制在資料進入業務邏輯前就攔截不合法輸入，兩者搭配使用可以大幅提升 API 的可靠性。
+
+## 延伸閱讀
+
+- [06 Spring Boot RESTful API 開發](06%20Spring%20Boot%20RESTful%20API%20開發.md) — RESTful API 建立、回應方式取捨、統一回應格式
+- [07 Spring MVC 註解驅動與 RESTful](07%20Spring%20MVC%20註解驅動與%20RESTful.md) — 註解驅動開發、JSON 序列化控制、@Controller vs @RestController

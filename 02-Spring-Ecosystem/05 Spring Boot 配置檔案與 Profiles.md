@@ -323,6 +323,28 @@ DB_PASSWORD=my-secret-password
 API_KEY=sk-xxxxxxxxxxxx
 ```
 
+## 替代方案：外部化配置
+
+當應用程式規模成長到多服務、多環境時，`application.yml` + Profiles 可能不再足夠。以下是常見的外部化配置方案：
+
+| 方案 | 適用場景 | 特點 |
+|------|---------|------|
+| **Spring Cloud Config** | 微服務架構、需要集中管理配置 | Git-backed、支援加密、即時刷新（搭配 Bus） |
+| **Kubernetes ConfigMap / Secret** | K8s 部署環境 | 與容器編排整合、Secret 自動加密儲存 |
+| **HashiCorp Vault** | 高安全需求、敏感資訊管理 | 動態密鑰、存取稽核、自動輪換 |
+
+**選擇原則**：
+
+- **單體應用或少量服務**：`application-{profile}.yml` + 環境變數已足夠
+- **微服務但已在 K8s 上**：優先用 ConfigMap / Secret，避免額外維護 Config Server
+- **需要集中管理 + 動態刷新**：Spring Cloud Config 是 Spring 生態系的原生方案
+- **敏感資訊（密碼、金鑰、憑證）**：用 Vault 或雲端廠商的 Secret Manager，不要存在 Git 中
+
+## 延伸閱讀
+
+- [04 Spring Boot 自動配置與 Starters](04%20Spring%20Boot%20自動配置與%20Starters.md)——理解自動配置如何讀取配置值
+- [03 配置中心（Spring Cloud Config）](../03-Microservices/03%20配置中心（Spring%20Cloud%20Config）.md)——Spring Cloud Config 的詳細設定與使用
+
 ## 小結
 
 Spring Boot 的配置機制既靈活又強大。善用 `@ConfigurationProperties` 實現型別安全的配置繫結，搭配 Profiles 區分多環境配置，再用驗證確保配置正確性，就能構建出可靠的應用程式配置管理。

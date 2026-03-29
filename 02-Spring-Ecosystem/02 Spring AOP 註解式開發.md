@@ -286,6 +286,88 @@ public class SecurityAspect { ... }
 public class LoggingAspect { ... }
 ```
 
+## AOP vs HandlerInterceptor vs Servlet Filter
+
+Spring 生態中有三種「攔截」機制，適用場景不同：
+
+| 比較項目 | AOP（`@Aspect`） | HandlerInterceptor | Servlet Filter |
+|---------|------------------|---------------------|----------------|
+| **作用層級** | 任意 Spring Bean 的方法 | Spring MVC Controller 層 | Servlet 容器層（HTTP 請求/回應） |
+| **可取得的資訊** | 方法簽名、參數、回傳值 | `HttpServletRequest`、`Handler` | `ServletRequest`、`ServletResponse` |
+| **典型用途** | 交易管理、快取、重試、日誌、權限邏輯 | 登入驗證、請求日誌、Controller 前後處理 | 編碼設定、CORS、壓縮、安全標頭 |
+| **是否依賴 Spring MVC** | 否（純 Spring 即可） | 是 | 否（Servlet 規範） |
+| **執行順序** | 由 Proxy 機制觸發 | DispatcherServlet 前後 | 在 DispatcherServlet 之前 |
+
+**選擇原則**：
+
+- **業務橫切邏輯**（交易、快取、重試、方法級權限）→ AOP
+- **請求級前後處理**（登入檢查、請求計時、Controller 攔截）→ HandlerInterceptor
+- **底層 HTTP 處理**（編碼、壓縮、安全標頭、CORS）→ Servlet Filter
+
+> 三者可以同時使用，執行順序為：Filter → Interceptor `preHandle` → AOP → 目標方法 → AOP → Interceptor `postHandle` → Filter。
+
+## 生產注意事項
+
+### CGLIB vs JDK 動態代理
+
+Spring AOP 預設使用兩種代理機制：
+
+| 代理方式 | 條件 | 限制 |
+|---------|------|------|
+| JDK 動態代理 | 目標類實作了介面 | 只能代理介面方法 |
+| CGLIB 代理 | 目標類未實作介面（Spring Boot 預設） | **無法代理 `final` 類和 `final` 方法** |
+
+Spring Boot 2.x 起預設使用 CGLIB（`spring.aop.proxy-target-class=true`）。若類或方法宣告為 `final`，AOP 切面將**靜默失效**，不會拋出錯誤。
+
+### Self-Invocation 陷阱
+
+同一類別內的方法互相呼叫時，**AOP 切面不會生效**，因為呼叫繞過了代理物件：
+
+```java
+@Service
+public class OrderService {
+
+    @Transactional
+    public void createOrder(Order order) {
+        // 這裡直接呼叫 this.validate()，不經過 Proxy
+        // @Transactional 或任何 AOP 切面都不會觸發
+        validate(order);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void validate(Order order) {
+        // 預期開啟新交易，但實際上不會
+    }
+}
+```
+
+**解決方案**：
+
+1. **拆分到不同類別**（推薦）：將 `validate()` 移到獨立的 `OrderValidator` Service
+2. **注入自身代理**：透過 `ApplicationContext.getBean()` 或 `@Lazy` 自我注入
+3. **使用 `AopContext`**：`((OrderService) AopContext.currentProxy()).validate(order)`（需啟用 `exposeProxy`）
+
+### `@EnableAspectJAutoProxy` 注意事項
+
+| 屬性 | 預設值 | 說明 |
+|------|--------|------|
+| `proxyTargetClass` | `false`（Spring Boot 預設覆寫為 `true`） | `true` 強制使用 CGLIB |
+| `exposeProxy` | `false` | `true` 允許透過 `AopContext.currentProxy()` 取得代理物件 |
+
+### 效能考量
+
+- AOP 代理會增加方法呼叫的額外開銷，**避免在極高頻迴圈內的方法**上使用 AOP
+- 切入點表達式越精確，匹配速度越快——避免過於寬泛的 `execution(* *(..))`
+- `@Around` 通知比 `@Before` / `@After` 開銷略大，僅在需要控制執行流程時使用
+
 ## 小結
 
 Spring 6.x 的 `@AspectJ` 註解式 AOP 相比 XML 配置更加直覺和簡潔。核心概念不變——切面、切入點、通知——但程式碼和配置合併在一起，更易於閱讀和維護。自訂註解 + `@Around` 是最靈活的組合，可以實現日誌、效能監控、重試、權限檢查等各種橫切關注點。
+
+生產環境需特別注意 CGLIB 對 `final` 的限制、同類方法呼叫的 Self-Invocation 陷阱，以及切入點表達式的效能影響。
+
+## 延伸閱讀
+
+- [01 Spring Core — DI 與 IoC](01%20Spring%20Core%20—%20DI%20與%20IoC.md)：AOP 依賴 IoC 容器管理代理物件，理解 Bean 生命週期有助於掌握切面的運作時機
+- [09 Spring MVC 攔截器與跨域](09%20Spring%20MVC%20攔截器與跨域.md)：HandlerInterceptor 與 AOP 的差異比較，請求級攔截的實作方式
+- [13 Spring 事務管理](13%20Spring%20事務管理.md)：`@Transactional` 是 AOP 最典型的應用，深入了解交易傳播行為與 Self-Invocation 問題

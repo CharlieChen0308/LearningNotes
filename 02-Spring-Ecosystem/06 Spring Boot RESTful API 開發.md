@@ -156,6 +156,18 @@ public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 }
 ```
 
+## 回應方式取捨分析
+
+Spring Boot RESTful API 有三種主流回應方式，各有適用場景：
+
+| 方式 | 優點 | 缺點 | 適用場景 |
+|------|------|------|----------|
+| 直接返回物件 | 程式碼最簡潔，方法簽名即文件 | 無法自訂 HTTP 狀態碼與標頭 | 簡單 CRUD、狀態碼固定的端點 |
+| `ResponseEntity` | 完整控制狀態碼、標頭、正文 | 程式碼較冗長，每個方法都要包裝 | 需動態決定狀態碼（如 200/404）、需設定自訂標頭 |
+| 自訂包裝（`ApiResponse`） | 前端解析格式統一，可攜帶業務碼 | HTTP 狀態碼永遠是 200，不利於中間層快取與監控；違反 REST 語意 | 前端團隊偏好統一格式、需要業務級錯誤碼 |
+
+**實務建議**：優先使用「直接返回 + `@ResponseStatus`」處理固定狀態碼，需要動態決定時改用 `ResponseEntity`。自訂包裝（`ApiResponse`）除非團隊有明確共識，否則容易造成 HTTP 語意與實際狀態不一致的問題。
+
 ## 統一回應格式
 
 定義統一的 API 回應結構：
@@ -240,7 +252,7 @@ public UserDto createUser(@Valid @RequestBody CreateUserRequest request) {
 }
 ```
 
-驗證失敗時會拋出 `MethodArgumentNotValidException`，配合全域例外處理可統一回傳錯誤訊息（見 Spring MVC 例外處理篇）。
+驗證失敗時會拋出 `MethodArgumentNotValidException`，配合全域例外處理可統一回傳錯誤訊息（見 [08 Spring MVC 例外處理與驗證](08%20Spring%20MVC%20例外處理與驗證.md)）。
 
 ## 全域例外處理
 
@@ -305,6 +317,35 @@ spring:
       allowed-methods: GET,POST,PUT,DELETE,PATCH
 ```
 
+## 生產注意事項
+
+### API 版本策略
+
+常見做法是 URL 路徑版本（`/api/v1/users`），簡單直觀且方便路由層控制。Header 版本（`Accept: application/vnd.myapp.v1+json`）語意更正確但偵錯較困難。建議初期採用 URL 路徑版本，待 API 穩定後再評估是否遷移。
+
+### Rate Limiting（限流）
+
+生產環境務必對外部 API 加上限流。Spring Boot 可搭配 Bucket4j 或 API Gateway（如 Spring Cloud Gateway）的內建限流功能。建議在 Gateway 層統一處理，而非每個微服務各自實作。
+
+### 分頁最佳實踐
+
+- 永遠為列表端點提供分頁，避免一次返回全部資料
+- 設定 `size` 上限（如最大 100），防止惡意請求拖垮資料庫
+- 回應中包含 `totalElements`、`totalPages`、`currentPage` 等中繼資訊
+- 大資料量場景考慮改用 Cursor-based 分頁取代 Offset-based
+
+### 回應大小限制
+
+- 避免嵌套過深的物件結構，善用 DTO 投影只返回前端需要的欄位
+- 大量資料匯出場景使用串流回應（`StreamingResponseBody`），而非一次載入記憶體
+- 可在 Nginx 或 Gateway 層設定 response body size 上限
+
 ## 小結
 
 Spring Boot 結合 Spring MVC 的註解式開發，讓建立 RESTful API 變得非常簡潔。善用 `@RestController`、`ResponseEntity`、`@Valid` 和 `@RestControllerAdvice`，就能構建出結構清晰、驗證完整、錯誤處理統一的 API 服務。
+
+## 延伸閱讀
+
+- [07 Spring MVC 註解驅動與 RESTful](07%20Spring%20MVC%20註解驅動與%20RESTful.md) — 深入了解 Handler Method 參數繫結與 JSON 序列化控制
+- [08 Spring MVC 例外處理與驗證](08%20Spring%20MVC%20例外處理與驗證.md) — 全域例外處理、資料驗證、自訂驗證註解
+- [API 設計最佳實踐](../09-Software-Engineering/04%20API%20設計最佳實踐.md) — 跨框架的 API 設計原則與命名規範

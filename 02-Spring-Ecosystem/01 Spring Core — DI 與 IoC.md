@@ -234,7 +234,72 @@ public class NotificationService {
 
 透過 IoC，切換 Email 到 SMS 只需要調整配置（或使用 `@Primary`、`@Qualifier`），完全不用改 `NotificationService` 的程式碼。
 
-## 6、小結
+## 6、何時不適用 Spring DI
+
+Spring DI 不是銀彈，以下場景應考慮是否真的需要：
+
+| 場景 | 原因 | 替代方案 |
+|------|------|----------|
+| 簡單腳本 / CLI 工具 | 啟動成本高，依賴少時 DI 容器是殺雞用牛刀 | 直接 `new`，或用輕量框架如 Picocli |
+| 效能敏感的熱路徑 | 反射建立物件、Proxy 攔截有額外開銷 | 在熱路徑中避免動態查找 Bean，改用直接引用 |
+| 依賴關係極簡單的微型服務 | 只有 2–3 個類別，DI 框架反而增加複雜度 | 手動建構子注入（Pure DI），不需要容器 |
+
+> **替代框架**：如果專案在 Jakarta EE（前 Java EE）生態系，CDI（Contexts and Dependency Injection）是標準規範的 DI 方案，與 Spring DI 概念相似但屬於不同體系。
+
+## 7、生產環境注意事項
+
+### Singleton Scope 的執行緒安全
+
+Spring Bean 預設是 `singleton`，整個應用程式共用同一個實例。**不要在 singleton Bean 中使用可變的實例變數**來儲存請求狀態：
+
+```java
+@Service
+public class OrderService {
+    // ❌ 錯誤：singleton 共用，多執行緒同時寫入會出問題
+    private Order currentOrder;
+
+    // ✅ 正確：狀態放在方法參數或 RequestScope 中
+    public void processOrder(Order order) {
+        // 使用局部變數處理
+    }
+}
+```
+
+### Prototype 注入 Singleton 的陷阱
+
+將 `prototype` Bean 注入 `singleton` Bean 時，prototype 實例只會在 singleton 建立時注入一次，之後每次使用的都是同一個實例，**失去了 prototype 的意義**：
+
+```java
+@Service
+public class CartService {
+    // ❌ 陷阱：ShoppingCart 雖然是 prototype，但只會注入一次
+    private final ShoppingCart cart;
+
+    // ✅ 正確：使用 ObjectProvider 每次取用時建立新實例
+    private final ObjectProvider<ShoppingCart> cartProvider;
+
+    public CartService(ObjectProvider<ShoppingCart> cartProvider) {
+        this.cartProvider = cartProvider;
+    }
+
+    public ShoppingCart getNewCart() {
+        return cartProvider.getObject();  // 每次呼叫都是新的
+    }
+}
+```
+
+### 循環依賴
+
+A 依賴 B、B 又依賴 A，Spring 在建構子注入時會直接拋出 `BeanCurrentlyInCreationException`。**正確做法是重新設計，消除循環依賴**（例如抽出共用邏輯到第三個 Bean）。`@Lazy` 可以延遲載入來繞過問題，但只是治標不治本，應作為最後手段：
+
+```java
+// ⚠️ 最後手段：@Lazy 延遲載入打破循環，但建議優先重構消除循環
+public class ServiceA {
+    public ServiceA(@Lazy ServiceB serviceB) { ... }
+}
+```
+
+## 8、小結
 
 | 概念 | 一句話解釋 |
 |------|-----------|
@@ -244,5 +309,5 @@ public class NotificationService {
 | 建構子注入 | 官方推薦的 DI 方式，依賴不可變、容易測試 |
 
 > **延伸閱讀**：
-> - [03 Spring Java 配置與註解驅動](03%20Spring%20Java%20配置與註解驅動.md) — 取代 XML 的現代配置方式
-> - [02 Spring AOP 註解式開發](02%20Spring%20AOP%20註解式開發.md) — AOP 與 IoC 的搭配
+> - [02 Spring AOP 註解式開發](02%20Spring%20AOP%20註解式開發.md) — AOP 基於 IoC 容器的 Proxy 機制運作，理解 DI 後再學 AOP 會更順暢
+> - [03 Spring Java 配置與註解驅動](03%20Spring%20Java%20配置與註解驅動.md) — 取代 XML 的現代 Bean 定義方式，涵蓋 `@Configuration`、`@ComponentScan`、Profile 切換等實務配置

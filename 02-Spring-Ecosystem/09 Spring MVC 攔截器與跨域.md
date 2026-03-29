@@ -151,6 +151,17 @@ public class AuthInterceptor implements HandlerInterceptor {
 }
 ```
 
+### 認證攔截器的替代方案：Spring Security Filter Chain
+
+上述 `AuthInterceptor` 適合簡單場景，但在正式專案中，**認證與授權建議使用 Spring Security Filter Chain**，原因如下：
+
+- **執行順序更早**：Security Filter 在 `DispatcherServlet` 之前執行，能攔截所有請求（包含靜態資源、Actuator 端點等）
+- **功能更完整**：內建 CSRF 防護、Session 管理、Remember Me、OAuth2 整合等
+- **宣告式授權**：透過 `@PreAuthorize`、`SecurityFilterChain` 等機制，權限規則更清晰
+- **社群標準**：與 JWT、OAuth2、LDAP 等認證方案有成熟整合
+
+> 詳見 [14 Spring Security 與 JWT](14%20Spring%20Security%20與%20JWT.md)
+
 ## 攔截器 vs Filter 比較
 
 | 特性 | Filter | HandlerInterceptor |
@@ -225,6 +236,13 @@ public List<DataDto> getData() { ... }
 
 > 注意：`allowCredentials=true` 時，`allowedOrigins` 不能設為 `"*"`，必須指定具體來源。
 
+### 生產環境 CORS 注意事項
+
+- **禁止 `allowedOrigins("*")`**：允許所有來源等於關閉同源策略保護，正式環境必須明確列出允許的域名
+- **預檢快取（`maxAge`）**：瀏覽器對 CORS 預檢請求（OPTIONS）會依 `maxAge` 快取結果。建議設為 3600（1 小時）以減少不必要的 OPTIONS 請求，提升效能
+- **Credential 處理**：當 `allowCredentials=true` 時，前端 `fetch` 必須設定 `credentials: 'include'`，且後端不可使用萬用字元 `"*"` 作為 `allowedOrigins`，否則瀏覽器會拒絕回應
+- **搭配 Spring Security**：若專案使用 Spring Security，CORS 設定建議透過 `SecurityFilterChain` 的 `.cors()` 配置，避免 `WebMvcConfigurer` 的設定被 Security Filter 覆蓋
+
 ### 透過 CorsFilter 設定
 
 如果需要在 Filter 層面處理 CORS（例如搭配 Spring Security）：
@@ -259,6 +277,8 @@ public class StaticResourceConfig implements WebMvcConfigurer {
             .setCachePeriod(3600);
 
         // Swagger UI（如有使用）
+        // ⚠️ Springfox 已停止維護，建議改用 SpringDoc OpenAPI（參見第 15 篇）
+        // SpringDoc 不需要手動配置靜態資源，加入依賴即可自動註冊
         registry.addResourceHandler("/swagger-ui/**")
             .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
     }
@@ -301,4 +321,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 ## 小結
 
-攔截器和 CORS 是 Spring MVC 應用中常見的橫切關注點。攔截器適合用於認證、日誌、效能監控等場景，而 CORS 設定則是前後端分離架構中的必備配置。透過 `WebMvcConfigurer` 介面，可以集中管理這些配置，保持程式碼整潔。
+攔截器和 CORS 是 Spring MVC 應用中常見的橫切關注點。攔截器適合用於日誌、效能監控等場景（認證授權建議改用 Spring Security），而 CORS 設定則是前後端分離架構中的必備配置。透過 `WebMvcConfigurer` 介面，可以集中管理這些配置，保持程式碼整潔。
+
+## 延伸閱讀
+
+- [14 Spring Security 與 JWT](14%20Spring%20Security%20與%20JWT.md)——認證授權的正式方案，涵蓋 Filter Chain、JWT 整合
+- [15 API 文件（SpringDoc OpenAPI）](15%20API%20文件（SpringDoc%20OpenAPI）.md)——取代 Springfox 的 API 文件方案

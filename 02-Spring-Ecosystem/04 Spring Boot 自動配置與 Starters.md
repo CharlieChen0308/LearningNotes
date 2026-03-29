@@ -197,6 +197,69 @@ public class MyProperties {
 com.example.MyAutoConfiguration
 ```
 
+## 取捨分析：何時排除自動配置
+
+自動配置雖然方便，但並非總是適合。以下情境應考慮排除：
+
+| 情境 | 說明 | 範例 |
+|------|------|------|
+| Bean 衝突 | 自動配置的 Bean 與自訂 Bean 產生衝突 | 自訂 `ObjectMapper` 但 Jackson 自動配置仍介入 |
+| 效能考量 | 不需要的自動配置拖慢啟動時間 | 不用 JMX 卻載入 `JmxAutoConfiguration` |
+| 不必要的功能 | 引入的 Starter 包含用不到的配置 | 只需 JDBC 但 `DataSourceAutoConfiguration` 嘗試建立連線池 |
+
+## 生產注意事項
+
+### 排除自動配置的策略
+
+```java
+// 方式一：在 @SpringBootApplication 上排除
+@SpringBootApplication(exclude = {
+    DataSourceAutoConfiguration.class,
+    JmxAutoConfiguration.class
+})
+public class MyApplication { ... }
+
+// 方式二：在 application.yml 中排除（適合環境差異化）
+// spring:
+//   autoconfigure:
+//     exclude:
+//       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+```
+
+**選擇原則**：固定不需要的用 `exclude` 參數；依環境而定的用 `application.yml` 配置。
+
+### 偵錯自動配置
+
+當自動配置行為不如預期時，使用以下方式排查：
+
+```bash
+# 方式一：啟動時加 --debug 旗標
+java -jar app.jar --debug
+
+# 方式二：在配置檔中設定
+# debug=true
+```
+
+啟動日誌會輸出 `ConditionEvaluationReport`，包含每個自動配置類的匹配結果與原因。重點關注：
+
+- **Positive matches**：哪些配置被啟用、為什麼
+- **Negative matches**：哪些配置被跳過、缺少什麼條件
+- **Unconditional classes**：無條件載入的配置類
+
+### 自訂 Starter 最佳實務
+
+建立自訂 Starter 時，遵循以下原則：
+
+1. **拆分模組**：`{name}-spring-boot-starter`（只含依賴）+ `{name}-spring-boot-autoconfigure`（含自動配置邏輯）
+2. **不要使用 `@ComponentScan`**：自動配置模組應只靠 `@Bean` 方法註冊 Bean，避免掃描到使用者的類別
+3. **一律加 `@ConditionalOnMissingBean`**：讓使用者能覆蓋任何預設 Bean
+4. **提供 `@ConfigurationProperties`**：讓使用者透過配置檔案調整行為，而非寫程式碼
+
+## 延伸閱讀
+
+- [03 Spring Java 配置與註解驅動](03%20Spring%20Java%20配置與註解驅動.md)——理解 `@Configuration` 與 `@Bean` 的基礎
+- [05 Spring Boot 配置檔案與 Profiles](05%20Spring%20Boot%20配置檔案與%20Profiles.md)——如何透過配置檔案覆蓋自動配置的預設值
+
 ## 小結
 
 自動配置和 Starters 是 Spring Boot 能夠「開箱即用」的核心機制。理解自動配置的原理（條件註解 + 預設值），就能在享受便利的同時，靈活地覆蓋任何預設行為。
